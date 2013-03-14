@@ -32,10 +32,10 @@
 
 (defn connect-with-id!
   "Connects two vertices with the given label, and, optionally, with the given properties."
-  ([id v1 label v2] (connect! id v1 (name label) v2 {}))
+  ([id v1 label v2] (connect-with-id! id v1 (name label) v2 {}))
   ([id v1 label v2 data]
      (*pre-fn*)
-     (let [new-edge (.addEdge *graph* v1 v2 (name label))]
+     (let [new-edge (.addEdge *graph* id v1 v2 (name label))]
        (merge! new-edge data))))
 
 ;;
@@ -79,10 +79,10 @@
 
 (defn endpoints
   "Returns the endpoints of the edge in array with the order [starting-node,ending-node]."
-  [this]
+  [edge]
   (*pre-fn*)
-   [(.getVertex this Direction/OUT)
-    (.getVertex this Direction/IN)])
+  [(.getVertex edge Direction/OUT)
+   (.getVertex edge Direction/IN)])
 
 ;; (defn edges-between
 ;;   "Returns a set of the edges between two vertices, direction considered."

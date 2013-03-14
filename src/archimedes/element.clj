@@ -4,18 +4,16 @@
 
 
 (defn get
-  ([elem keys] (get elem keys nil))
-  ([elem keys not-found]
-     (let [value (.getProperty elem (name (first keys)))]
-       (if value
-         value
-         not-found))))
+  ([elem key] (get elem key nil))
+  ([elem key not-found]
+     (let [value (.getProperty elem (name key))]
+       (or value not-found))))
 
 (defn keys [elem]
-  (map keyword (.getPropertyKeys elem)))
+  (set (map keyword (.getPropertyKeys elem))))
 
 (defn vals [elem]
-  (map #(.getProperty elem %) (.getPropertyKeys elem)))
+  (set (map #(.getProperty elem %) (.getPropertyKeys elem))))
 
 (defn id-of [elem]
   (.getId elem))
@@ -24,17 +22,16 @@
   ;;Avoids changing keys that shouldn't be changed.
   ;;Important when using types. You aren't ever going to change a
   ;;user's id for example.
-  (map (fn [[value key]]
-         (when (not= value (get elem (name key)))
-           (.removeProperty elem (name key)) ;;Hacky work around! Yuck!
-           (.setProperty elem (name key) value)))
-       (partition 2 kvs))
+  (doseq [[key value] (partition 2 kvs)]
+    (when (not= value (get elem (name key)))
+      (.removeProperty elem (name key)) ;;Hacky work around! Yuck!
+      (.setProperty elem (name key) value)))
   elem)
 
 (defn merge!
   [elem & maps]
   (doseq [d maps]
-    (apply assoc! (cons elem (vec d))))
+    (apply assoc! (cons elem (flatten (into [] d)))))
   elem)
 
 (defn dissoc! [elem & keys]

@@ -35,7 +35,7 @@
   "Returns a persistent map representing the vertex."
   [vertex]
   (*pre-fn*)
-  (->> (get vertex)
+  (->> (keys vertex)
        (map #(vector (keyword %) (get vertex %)))
        (into {:__id__ (id-of vertex)})))
 
