@@ -46,4 +46,4 @@
 
 (defn clear!
   ([elem]
-     (apply dissoc! (cons elem (keys)))))
+     (apply dissoc! (cons elem (keys elem)))))

@@ -32,3 +32,29 @@
     (v/dissoc! c :a)
     (is (nil? (:a (v/to-map a))))
     (is (nil? (:a (v/to-map c))))))
+
+
+(deftest test-clear!
+  (g/use-clean-graph!)
+  (let [a (v/create-with-id! 100 {:a 1})
+        b (v/create-with-id! 101)
+        c (e/connect-with-id! 102 a :label b {:a 1})]
+    (v/clear! a)
+    (e/clear! c)
+    (is (empty? (v/keys a)))
+    (is (empty? (e/keys c)))))
+
+
+(deftest test-update!
+  (g/use-clean-graph!)
+  (let [a (v/create-with-id! 100 {:a 1})
+        b (v/create-with-id! 101)
+        c (e/connect-with-id! 102 a :label b {:a 1})]
+    (v/update! a :a + 9)
+    (v/update! a :b (constantly 10))
+    (e/update! c :a + 9)
+    (e/update! c :b (constantly 10))    
+    (is (= 10 (v/get a :a)))
+    (is (= 10 (v/get c :a)))
+    (is (= 10 (v/get a :b)))
+    (is (= 10 (v/get c :b)))))
