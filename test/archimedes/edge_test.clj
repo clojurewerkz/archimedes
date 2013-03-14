@@ -58,29 +58,29 @@
     (is (= (.getId edge) (.getId fresh-edge)))
     (is (= (e/to-map edge) (e/to-map fresh-edge)))))
 
-;; ;; (deftest test-upconnect!
-;; ;;   (testing "Upconnecting once"
-;; ;;     (g/use-clean-graph!)
-;; ;;     (let [v1 (v/create! {:name "v1"})
-;; ;;           v2 (v/create! {:name "v2"})
-;; ;;           edge (first (e/upconnect! v1 v2 "connexion" {:name "the edge"}))]
-;; ;;       (is (e/connected? v1 v2))
-;; ;;       (is (e/connected? v1 v2 "connexion"))
-;; ;;       (is (not (e/connected? v2 v1)))
-;; ;;       (is (= "the edge" (e/get-property edge :name)))
-;; ;;       (is (= 1 (count (seq (.getEdges g/*graph*)))))))
+(deftest test-upconnect!
+  (testing "Upconnecting once"
+    (g/use-clean-graph!)
+    (let [v1 (v/create-with-id! 100 {:name "v1"})
+          v2 (v/create-with-id! 101 {:name "v2"})
+          edge (e/unique-upconnect-with-id! 102 v1 :connexion v2 {:name "the edge"})]
+      (is (e/connected? v1 v2))
+      (is (e/connected? v1 :connexion v2))
+      (is (not (e/connected? v2 v1)))
+      (is (= "the edge" (e/get edge :name)))
+      (is (= 1 (count (seq (.getEdges g/*graph*)))))))
 
-;; ;;   (testing "Upconnecting multiple times"
-;; ;;     (g/use-clean-graph!)
-;; ;;     (let [v1 (v/create! {:name "v1"})
-;; ;;           v2 (v/create! {:name "v2"})
-;; ;;           edge (first (e/upconnect! v1 v2 "connexion" {:name "the edge"}))
-;; ;;           edge (first (e/upconnect! v1 v2 "connexion" {:a 1 :b 2}))
-;; ;;           edge (first (e/upconnect! v1 v2 "connexion" {:b 0}))]
-;; ;;       (is (e/connected? v1 v2))
-;; ;;       (is (e/connected? v1 v2 "connexion"))
-;; ;;       (is (not (e/connected? v2 v1)))
-;; ;;       (is (= "the edge" (e/get-property edge :name)))
-;; ;;       (is (= 1 (e/get-property edge :a)))
-;; ;;       (is (= 0 (e/get-property edge :b)))
-;; ;;       (is (= 1 (count (seq (.getEdges g/*graph*))))))))
+  (testing "Upconnecting multiple times"
+    (g/use-clean-graph!)
+    (let [v1 (v/create-with-id! 100 {:name "v1"})
+          v2 (v/create-with-id! 101 {:name "v2"})
+          edge (e/unique-upconnect-with-id! 102 v1 :connexion v2 {:name "the edge"})
+          edge (e/unique-upconnect-with-id! 103 v1 :connexion v2 {:a 1 :b 2})
+          edge (e/unique-upconnect-with-id! 104 v1 :connexion v2 {:b 0})]
+      (is (e/connected? v1 v2))
+      (is (e/connected? v1 :connexion v2))
+      (is (not (e/connected? v2 v1)))
+      (is (= "the edge" (e/get edge :name)))
+      (is (= 1 (e/get edge :a)))
+      (is (= 0 (e/get edge :b)))
+      (is (= 1 (count (seq (.getEdges g/*graph*))))))))

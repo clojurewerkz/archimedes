@@ -76,14 +76,13 @@
      (let [new-vertex (.addVertex *graph* id)]
        (merge! new-vertex data))))
 
-;;TODO add upsert-with-id
 (defn upsert!
   "Given a key and a property map, upsert! either creates a new node
    with that property map or updates all nodes with the given key
    value pair to have the new properties specifiied by the map. Always
    returns the set of vertices that were just update or created."
   [k m]
-  (*pre-fn*);;TODO these calls could probably be removed
+  ;;N.B. find-by-kv calls *pre-fn*
   (let [vertices (find-by-kv (name k) (k m))]
     (if (empty? vertices)
       (set [(create! nil m)]) 
@@ -94,8 +93,32 @@
 (defn unique-upsert!
   "Like upsert!, but throws an error when more than one element is returned."
   [& args]
-  (*pre-fn*);;TODO these calls could probably be removed
   (let [upserted (apply upsert! args)]
+    (if (= 1 (count upserted))
+      (first upserted)
+      (throw (Throwable.
+              (str
+               "Don't call unique-upsert! when there is more than one element returned.\n"
+               "There were " (count upserted) " vertices returned.\n"
+               "The arguments were: " args "\n"))))))
+
+(defn upsert-with-id!
+  "Given a key and a property map, upsert! either creates a new node
+   with that property map or updates all nodes with the given key
+   value pair to have the new properties specifiied by the map. Always
+   returns the set of vertices that were just update or created."
+  [id k m]
+  (let [vertices (find-by-kv (name k) (k m))]
+    (if (empty? vertices)
+      (set [(create-with-id! id m)]) 
+      (do
+        (doseq [vertex vertices] (merge! vertex m))
+        vertices))))
+
+(defn unique-upsert-with-id!
+  "Like upsert!, but throws an error when more than one element is returned."
+  [& args]
+  (let [upserted (apply upsert-with-id! args)]
     (if (= 1 (count upserted))
       (first upserted)
       (throw (Throwable.

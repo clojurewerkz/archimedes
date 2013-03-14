@@ -64,20 +64,20 @@
     (is (= #{"B" "C"}
            (set (map #(v/get % :name) (v/find-by-kv :age 2)))))))
 
-;; ;; (deftest test-upsert!
-;; ;;   (g/use-clean-graph!)
-;; ;;   (let [v1-a (v/upsert! :first-name
-;; ;;                         {:first-name "Zack" :last-name "Maril" :age 21})
-;; ;;         v1-b (v/upsert! :first-name
-;; ;;                         {:first-name "Zack" :last-name "Maril" :age 22})
-;; ;;         v2   (v/upsert! :first-name
-;; ;;                         {:first-name "Brooke" :last-name "Maril" :age 19})]
-;; ;;     (is (= 22
-;; ;;            (v/get-property (v/refresh (first v1-a)) :age)
-;; ;;            (v/get-property (v/refresh (first v1-b)) :age)))
-;; ;;     (v/upsert! :last-name {:last-name "Maril"
-;; ;;                            :heritage "Some German Folks"})
-;; ;;     (is (= "Some German Folks"
-;; ;;            (v/get-property (v/refresh (first v1-a)) :heritage)
-;; ;;            (v/get-property (v/refresh (first v1-b)) :heritage)
-;; ;;            (v/get-property (v/refresh (first v2)) :heritage)))))
+(deftest test-upsert!
+  (g/use-clean-graph!)
+  (let [v1-a (v/upsert-with-id! 100 :first-name
+               {:first-name "Zack" :last-name "Maril" :age 21})
+        v1-b (v/upsert-with-id! 101 :first-name
+                        {:first-name "Zack" :last-name "Maril" :age 22})
+        v2   (v/upsert-with-id! 102 :first-name
+                        {:first-name "Brooke" :last-name "Maril" :age 19})]
+    (is (= 22
+           (v/get (first v1-a) :age)
+           (v/get (first v1-b) :age)))
+    (v/upsert-with-id! 103 :last-name {:last-name "Maril"
+                           :heritage "Some German Folks"})
+    (is (= "Some German Folks"
+           (v/get (first v1-a) :heritage)
+           (v/get (first v1-b) :heritage)
+           (v/get (first v2) :heritage)))))
