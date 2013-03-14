@@ -2,7 +2,6 @@
   (:use clojure.test)
   (:require [archimedes.core :as g]
             [archimedes.io :as io]
-            [archimedes.type :as t]
             [archimedes.vertex :as v]
             [archimedes.edge :as e]
             [clojure.java.io :as clj-io]))
@@ -76,12 +75,7 @@
 
   (testing "With a graph with type information"
     (letfn [(init-graph-with-types []
-              (g/use-clean-graph!)
-              (t/create-vertex-key :my-int Integer)
-              (t/create-vertex-key :my-long Long)
-              (t/create-vertex-key :my-float Float)
-              (t/create-vertex-key :my-double Double)
-              (t/create-vertex-key :my-boolean Boolean))]
+              (g/use-clean-graph!))]
       (let [filename-typed "my-test-graph-typed.graphson"
             filename-untyped "my-test-graph-untyped.graphson"
             file-typed (clj-io/file filename-typed)
@@ -111,10 +105,10 @@
                                         ; Write one without type info
             (io/write-graph-graphson filename-untyped false))
 
-          (testing "Loading a graphson without type infomation"
-            (init-graph-with-types)
-            (is (thrown? java.lang.IllegalArgumentException
-                         (io/load-graph-graphson filename-untyped)) "Causes type errors to be thrown"))
+          ;; (testing "Loading a graphson without type infomation"
+          ;;   (init-graph-with-types)
+          ;;   (is (thrown? java.lang.IllegalArgumentException
+          ;;                (io/load-graph-graphson filename-untyped)) "Causes type errors to be thrown"))
 
           (testing "Loading a graphson with type infomation"
             (init-graph-with-types)

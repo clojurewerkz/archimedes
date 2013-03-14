@@ -1,6 +1,6 @@
-(ns hermes.io
+(ns archimedes.io
   (:require [clojure.java.io :as io]
-            [hermes.core :as g])
+            [archimedes.core :as g])
   (:import [com.tinkerpop.blueprints.util.io.graphml GraphMLWriter GraphMLReader]
            [com.tinkerpop.blueprints.util.io.gml GMLWriter GMLReader]
            [com.tinkerpop.blueprints.util.io.graphson GraphSONWriter GraphSONReader GraphSONMode]))
