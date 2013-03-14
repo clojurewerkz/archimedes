@@ -1,7 +1,8 @@
 (ns archimedes.vertex
-  (:import (com.tinkerpop.blueprints Vertex))
-  (:use [archimedes.core :only (*graph* transact! *pre-fn*)]
-        [archimedes.util :only (immigrate)]))
+  (:import (com.tinkerpop.blueprints Vertex)
+           (com.tinkerpop.blueprints.impls.tg TinkerGraph))
+  (:require [archimedes.core :refer (*graph* *pre-fn* *post-fn* get-new-id)]
+            [archimedes.util :refer (immigrate)]))
 
 (immigrate 'archimedes.element)
 
@@ -49,7 +50,10 @@
   ([] (create! {}))
   ([data]
      (*pre-fn*)
-     (set-properties! (.addVertex *graph*) data)))
+     (let [new-vertex (if (= TinkerGraph (type *graph*))
+                        (.addVertex *graph* (get-new-id))
+                        (.addVertex *graph*))])
+     (set-properties! new-vertex data)))
 
 (defn upsert!
   "Given a key and a property map, upsert! either creates a new node

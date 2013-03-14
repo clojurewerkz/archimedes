@@ -9,14 +9,16 @@
 ;;Tinker graph element creation
 (def vid (atom 100))
 
+(defn get-new-id [] (swap! vid inc))
+
 (defn use-this-graph! [g]
   (alter-var-root (var *graph*) (constantly g)))
 
 (defn use-new-tinkergraph! []
-  (use-this-graph (TinkerGraphFactory/createTinkerGraph)))
+  (use-this-graph! (TinkerGraphFactory/createTinkerGraph)))
 
 (defn use-clean-graph! []
-  (use-new-tinker-graph!)
+  (use-new-tinkergraph!)
   (map #(.removeEdge *graph* %) (seq (.getEdges *graph*)))
   (map #(.removeVertex *graph* %) (seq (.getVertices *graph*))))
 

@@ -13,7 +13,7 @@
 (defn find-by-id
   "Retrieves nodes by id from the graph."
   [& ids]
-  (ensure-graph-is-transaction-safe)
+  (*pre-fn*)
   (if (= 1 (count ids))
     (.getEdge *graph* (first ids))
     (seq (for [id ids] (.getEdge *graph* id)))))
@@ -34,7 +34,7 @@
 (defn endpoints
   "Returns the endpoints of the edge in array with the order [starting-node,ending-node]."
   [this]
-  (ensure-graph-is-transaction-safe)
+  (*pre-fn*)
   [(.getVertex this Direction/OUT)
    (.getVertex this Direction/IN)])
 ;;
@@ -44,7 +44,7 @@
 (defn refresh
   "Goes and grabs the edge from the graph again. Useful for \"refreshing\" stale edges."
   [edge]
-  (ensure-graph-is-transaction-safe)
+  (*pre-fn*)
   (.getEdge *graph* (.getId edge)))
 
 ;;
@@ -55,8 +55,10 @@
   "Connects two vertices with the given label, and, optionally, with the given properties."
   ([v1 label v2] (connect! v1 (name label) v2 {}))
   ([v1 label v2 data]
-     (ensure-graph-is-transaction-safe)
-     (let [edge (.addEdge *graph* v1 v2 (name label))]
+     (*pre-fn*)
+     (let [edge (if (= TinkerGraph (type *graph*))
+                  (.addEdge *graph* (get-new-id) v1 v2 (name label))
+                  (.addEdge *graph* v1 v2 (name label)))]
        (set-properties! edge data)
        edge)))
 
@@ -67,4 +69,4 @@
 (defn delete!
   "Delete an edge."
   [edge]
-  (.removeEdge *graph* edge ))
+  (.removeEdge *graph* edge))
