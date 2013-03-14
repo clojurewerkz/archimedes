@@ -1,22 +1,20 @@
-(ns hermes.io-test
-  (:use clojure.test)
-  (:require [hermes.core :as g]
-            [hermes.io :as io]
-            [hermes.type :as t]
-            [hermes.vertex :as v]
-            [hermes.edge :as e]
-            [clojure.java.io :as clj-io]))
+;; (ns archimedes.io-test
+;;   (:use clojure.test)
+;;   (:require [archimedes.core :as g]
+;;             [archimedes.io :as io]
+;;             [archimedes.type :as t]
+;;             [archimedes.vertex :as v]
+;;             [archimedes.edge :as e]
+;;             [clojure.java.io :as clj-io]))
 
-(defn has-n-vertices [n]
-  (is (= n (count (seq (.getVertices g/*graph*))))))
+;; (defn has-n-vertices [n]
+;;   (is (= n (count (seq (.getVertices g/*graph*))))))
 
-(defn has-n-edges [n]
-  (is (= n (count (seq (.getEdges g/*graph*))))))
+;; (defn has-n-edges [n]
+;;   (is (= n (count (seq (.getEdges g/*graph*))))))
 
-;;These tests will come back in 0.3.0 when we get access to g.V again. 
-;; (deftest io-test
-;;   (testing "Loading and saving graphs graphml"
-;;   (g/open)
+;; (deftest test-loading-and-saving-graphs-graphml
+;;   (g/use-clean-graph!)
 ;;   (let [filename "my-test-graph.graphml"
 ;;         file (clj-io/file filename)]
 ;;     (letfn [(delete-graph-file [] (clj-io/delete-file file true))] ;; Delete file *silently* (no failure if it don't exist).
@@ -27,18 +25,16 @@
 ;;         (io/write-graph-graphml filename))
 
 ;;       ;; Open new graph and read it
-;;       (g/open)
+;;       (g/use-clean-graph!)
 ;;       (io/load-graph-graphml filename)
 
 ;;       (has-n-vertices 2)
 ;;       (has-n-edges 1)
 
 ;;       (delete-graph-file))))
-;;   )
-
 
 ;; (deftest test-loading-and-saving-graphs-gml
-;;   (g/open)
+;;   (g/use-clean-graph!)
 ;;   (let [filename "my-test-graph.gml"
 ;;         file (clj-io/file filename)]
 ;;     (letfn [(delete-graph-file [] (clj-io/delete-file file true))] ;; Delete file *silently* (no failure if it don't exist).
@@ -49,7 +45,7 @@
 ;;         (io/write-graph-gml filename))
 
 ;;       ;; Open new graph and read it
-;;       (g/open)
+;;       (g/use-clean-graph!)
 ;;       (io/load-graph-gml filename)
 
 ;;       (has-n-vertices 2)
@@ -59,7 +55,7 @@
 
 ;; (deftest test-loading-and-saving-graphs-graphson
 ;;   (testing "Without type information"
-;;     (g/open)
+;;     (g/use-clean-graph!)
 ;;     (let [filename "my-test-graph.graphson"
 ;;           file (clj-io/file filename)]
 ;;       (letfn [(delete-graph-file [] (clj-io/delete-file file true))] ;; Delete file *silently* (no failure if it don't exist).
@@ -70,7 +66,7 @@
 ;;           (io/write-graph-graphson filename))
 
 ;;         ;; Open new graph and read it
-;;         (g/open)
+;;         (g/use-clean-graph!)
 ;;         (io/load-graph-graphson filename)
 
 ;;         (has-n-vertices 2)
@@ -80,7 +76,7 @@
 
 ;;   (testing "With a graph with type information"
 ;;     (letfn [(init-graph-with-types []
-;;               (g/open)
+;;               (g/use-clean-graph!)
 ;;               (t/create-vertex-key :my-int Integer)
 ;;               (t/create-vertex-key :my-long Long)
 ;;               (t/create-vertex-key :my-float Float)

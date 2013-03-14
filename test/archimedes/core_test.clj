@@ -1,73 +1,44 @@
-(ns hermes.core-test  
-  (:use clojure.test
-        [hermes.conf :only (conf clear-db)])
-  (:require [hermes.core :as g]
-            [hermes.type :as t]
-            [hermes.vertex :as v])
-  (:import  (com.thinkaurelius.titan.graphdb.database   StandardTitanGraph)
-            (com.thinkaurelius.titan.graphdb.vertices   PersistStandardTitanVertex)))
+(ns archimedes.core-test
+  (:use clojure.test)
+  (:require [archimedes.core :as g]
+            [archimedes.vertex :as v])
+  (:import  (com.tinkerpop.blueprints Element TransactionalGraph TransactionalGraph$Conclusion)
+            (com.tinkerpop.blueprints.impls.tg TinkerGraphFactory TinkerGraph)))
 
-(clear-db)
-(g/open conf)
-
-(deftest test-vertices
-  (testing "Stored graph"
+(deftest test-opening-a-graph-in-memory
+  (testing "Graph in memory"
+    (g/use-clean-graph!)
     (is (= (type g/*graph*)
-           StandardTitanGraph)))
+           TinkerGraph))))
 
-  (testing "Stored graph"
-    (let [vertex (g/transact! (.addVertex g/*graph*))]      
-      (is (= PersistStandardTitanVertex (type vertex)))))
+(deftest test-with-graph
+  (testing "with-graph macro"
+    ; Open the usual *graph*
+    (g/use-clean-graph!)
+    ; Open a real graph the hard wary
+    (let [graph (TinkerGraphFactory/createTinkerGraph)]
+      (is (= 6 (count (seq (.getVertices graph)))) "graph has the new vertex")
+      (is (= 0 (count (seq (.getVertices g/*graph*)))) "the usual *graph* is still empty"))))
 
-  (testing "Stored graph"
-    (is (thrown? Throwable #"transact!" (v/create!))))
+(deftest test-retry-transact!
+  (testing "with backoff function"
+    (g/use-clean-graph!)
+    (let [sum (partial reduce +)
+          clock (atom [])
+          punch-clock (fn [] (swap! clock concat [(System/currentTimeMillis)]))]
+      (is (thrown? Exception (g/retry-transact! 3 (fn [n] (* n 100))
+                                                (punch-clock)
+                                                (/ 1 0))))
+      (let [[a,b,c] (map (fn [a b] (- a b)) (rest @clock) @clock)]
+        (is (>= a 100))
+        (is (>= b 200))
+        (is (>= c 300)))))
 
-  (testing "Dueling transactions"
-    (testing "Without retries"
-      (g/transact!
-       (t/create-vertex-key-once :vertex-id Long {:indexed true
-                                                  :unique true}))
-      (let [random-long (long (rand-int 100000))
-            f1 (future (g/transact! (v/upsert! :vertex-id {:vertex-id random-long})))
-            f2 (future (g/transact! (v/upsert! :vertex-id {:vertex-id random-long})))]
+  (testing "with transaction that returns nil"
+    (g/use-clean-graph!)
+    (g/retry-transact! 3 10
+      (v/create-with-id! 100)
+      nil)
+    (is (= 1 (count (seq (.getVertices g/*graph*)))) "graph has the new vertex")))
 
-        (is (thrown? java.util.concurrent.ExecutionException
-                     (do @f1 @f2)) "The futures throw errors.")))
-    (testing "With retries"
-      (g/open conf)
-      (g/transact!
-       (t/create-vertex-key-once :vertex-id Long {:indexed true
-                                                  :unique true}))
-      (let [random-long (long (rand-int 100000))
-            f1 (future (g/retry-transact! 3 100 (v/upsert! :vertex-id {:vertex-id random-long})))
-            f2 (future (g/retry-transact! 3 100 (v/upsert! :vertex-id {:vertex-id random-long})))]
 
-        (is (= random-long
-               (g/transact!
-                (v/get-property (v/refresh (first @f1)) :vertex-id))
-               (g/transact!
-                (v/get-property (v/refresh (first @f2)) :vertex-id))) "The futures have the correct values.")
-
-        (is (= 1 (count
-                  (g/transact! (v/find-by-kv :vertex-id random-long))))
-            "*graph* has only one vertex with the specified vertex-id"))))
-  (testing "With retries and an exponential backoff function"
-    (g/transact!
-     (t/create-vertex-key-once :vertex-id Long {:indexed true
-                                                :unique true}))
-    (let [backoff-fn (fn [try-count] (+ (Math/pow 10 try-count) (* try-count (rand-int 100))))
-          random-long (long (rand-int 100000))
-          f1 (future (g/retry-transact! 3 backoff-fn (v/upsert! :vertex-id {:vertex-id random-long})))
-          f2 (future (g/retry-transact! 3 backoff-fn (v/upsert! :vertex-id {:vertex-id random-long})))]
-
-      (is (= random-long
-             (g/transact!
-              (v/get-property (v/refresh (first @f1)) :vertex-id))
-             (g/transact!
-              (v/get-property (v/refresh (first @f2)) :vertex-id))) "The futures have the correct values.")
-
-      (is (= 1 (count
-                (g/transact! (v/find-by-kv :vertex-id random-long))))
-          "*graph* has only one vertex with the specified vertex-id")))
-  (g/shutdown)
-  (clear-db))

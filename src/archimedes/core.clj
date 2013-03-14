@@ -6,21 +6,19 @@
 (def ^{:dynamic true} *pre-fn* (fn []))
 (def ^{:dynamic true} *post-fn* identity)
 
-;;Tinker graph element creation
-(def vid (atom 100))
-
-(defn get-new-id [] (swap! vid inc))
-
-(defn use-this-graph! [g]
+(defn set-graph! [g]
   (alter-var-root (var *graph*) (constantly g)))
 
 (defn use-new-tinkergraph! []
-  (use-this-graph! (TinkerGraphFactory/createTinkerGraph)))
+  (set-graph! (TinkerGraphFactory/createTinkerGraph)))
 
 (defn use-clean-graph! []
   (use-new-tinkergraph!)
-  (map #(.removeEdge *graph* %) (seq (.getEdges *graph*)))
-  (map #(.removeVertex *graph* %) (seq (.getVertices *graph*))))
+  (doseq [e (seq (.getEdges *graph*))]
+    (.removeEdge *graph* e))
+  (doseq [v (seq (.getVertices *graph*))]
+    (.removeVertex *graph* v))
+  nil)
 
 (defn shutdown 
   "Shutdown the graph."
