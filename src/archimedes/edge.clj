@@ -73,7 +73,7 @@
                               q/in-vertex
                               (q/has "id" (.getId v2))
                               (q/back 2)
-                              (q/into-vec))]
+                              (q/into-vec!))]
        (when (not (empty? edges-set))
          edges-set))))
 

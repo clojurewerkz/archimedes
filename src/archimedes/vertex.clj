@@ -85,7 +85,7 @@
   ;;N.B. find-by-kv calls *pre-fn*
   (let [vertices (find-by-kv (name k) (k m))]
     (if (empty? vertices)
-      (set [(create! nil m)]) 
+      (set [(create! m)]) 
       (do
         (doseq [vertex vertices] (merge! vertex m))
         vertices))))

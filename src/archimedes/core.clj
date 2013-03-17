@@ -4,7 +4,9 @@
 
 (def ^{:dynamic true} *graph*)
 (def ^{:dynamic true} *pre-fn* (fn []))
-(def ^{:dynamic true} *post-fn* identity)
+
+(defn set-pre-fn! [f]
+  (alter-var-root (var *pre-fn*) (constantly f)))
 
 (defn set-graph! [g]
   (alter-var-root (var *graph*) (constantly g)))
