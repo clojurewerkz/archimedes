@@ -1,9 +1,10 @@
 (ns archimedes.vertex
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
-  (:import (com.tinkerpop.blueprints Vertex)
+  (:import (com.tinkerpop.blueprints Vertex Direction)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
   (:require [archimedes.core :refer (*graph* *pre-fn*)]
-            [archimedes.util :refer (immigrate)]))
+            [archimedes.util :refer (immigrate)]
+            [archimedes.conversion :refer (to-edge-direction)]))
 
 (immigrate 'archimedes.element)
 
@@ -54,7 +55,6 @@
   [k v]
   (*pre-fn*)
   (set (.getVertices *graph* (name k) v)))
-
 
 ;;
 ;; Creation methods

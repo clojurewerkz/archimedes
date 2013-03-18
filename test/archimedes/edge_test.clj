@@ -48,6 +48,28 @@
         edge (e/connect-with-id! 102 v1 :connexion v2)]
     (is (= ["v1" "v2"] (map #(e/get % :name) (e/endpoints edge))))))
 
+(deftest test-get-vertex
+  (g/use-clean-graph!)
+  (let [v1   (v/create-with-id! 100 {:name "v1"})
+        v2   (v/create-with-id! 101 {:name "v2"})
+        edge (e/connect-with-id! 102 v1 :connexion v2)]
+    (is (= v1 (e/get-vertex edge :out)))
+    (is (= v2 (e/get-vertex edge :in)))))
+
+(deftest test-tail-vertex
+  (g/use-clean-graph!)
+  (let [v1   (v/create-with-id! 100 {:name "v1"})
+        v2   (v/create-with-id! 101 {:name "v2"})
+        edge (e/connect-with-id! 102 v1 :connexion v2)]
+    (is (= v1 (e/tail-vertex edge)))))
+
+(deftest test-head-vertex
+  (g/use-clean-graph!)
+  (let [v1   (v/create-with-id! 100 {:name "v1"})
+        v2   (v/create-with-id! 101 {:name "v2"})
+        edge (e/connect-with-id! 102 v1 :connexion v2)]
+    (is (= v2 (e/head-vertex edge)))))
+
 (deftest test-refresh
   (g/use-clean-graph!)
   (let [v1 (v/create-with-id! 100 {:name "v1"})

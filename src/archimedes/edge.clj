@@ -1,9 +1,10 @@
 (ns archimedes.edge
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
-  (:import (com.tinkerpop.blueprints Edge Direction)
+  (:import (com.tinkerpop.blueprints Vertex Edge Direction)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
   (:require [archimedes.vertex :as v]
             [archimedes.core :refer (*graph* *pre-fn*)]
+            [archimedes.conversion :refer (to-edge-direction)]            
             [archimedes.util :refer (immigrate)]
             [ogre.core :as q]))
 
@@ -36,7 +37,7 @@
   "Get the label of the edge"
   [edge]
   (*pre-fn*)
-  (keyword (.. edge getLabel)))
+  (keyword (.getLabel edge)))
 
 (defn to-map
   "Returns a persisten map representing the edge."
@@ -53,6 +54,21 @@
   (if (= 1 (count ids))
                 (.getEdge *graph* (first ids))
                 (seq (for [id ids] (.getEdge *graph* id)))))
+
+(defn ^Vertex get-vertex
+  "Get the vertex of the edge in a certain direction."
+  [^Edge e direction]
+  (.getVertex e (to-edge-direction direction)))
+
+(defn ^Vertex head-vertex
+  "Get the head vertex of the edge."
+  [^Edge e]
+  (.getVertex e Direction/IN))
+
+(defn ^Vertex tail-vertex
+  "Get the tail vertex of the edge."  
+  [^Edge e]
+  (.getVertex e Direction/OUT))
 
 (defn endpoints
   "Returns the endpoints of the edge in array with the order [starting-node,ending-node]."
