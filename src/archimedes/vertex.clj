@@ -56,6 +56,38 @@
   (*pre-fn*)
   (set (.getVertices *graph* (name k) v)))
 
+(defn edges-of
+  "Returns edges that this vertex is part of with direction and with given labels"
+  [^Vertex v direction labels]
+  (.getEdges v (to-edge-direction direction) (into-array String labels)))
+
+(defn all-edges-of
+  "Returns edges that this vertex is part of, with given labels"
+  [^Vertex v labels]
+  (.getEdges v Direction/BOTH (into-array String labels)))
+
+(defn outgoing-edges-of
+  "Returns outgoing (outbound) edges that this vertex is part of, with given labels"
+  [^Vertex v labels]
+  (.getEdges v Direction/OUT (into-array String labels)))
+
+(defn incoming-edges-of
+  "Returns incoming (inbound) edges that this vertex is part of, with given labels"
+  [^Vertex v labels]
+  (.getEdges v Direction/IN (into-array String labels)))
+
+(defn connected-vertices-of
+  [^Vertex v direction labels]
+  (.getVertices v (to-edge-direction direction) (into-array String labels)))
+
+(defn connected-out-vertices
+  [^Vertex v labels]
+  (.getVertices v Direction/OUT (into-array String labels)))
+
+(defn connected-in-vertices
+  [^Vertex v labels]
+  (.getVertices v Direction/IN (into-array String labels)))
+
 ;;
 ;; Creation methods
 ;;
