@@ -22,13 +22,5 @@ namespace."
           (intern *ns* sym (var-get v)) 
           (intern *ns* sym))))))
 
-;;A few methods that are useful for debugging at the repl. Hopefully,
-;;this will only be used for development purposes.
-(defn members-of-object [object]
-  (-> object r/reflect :members))
-
-(defmacro find-member [object prop]
-  `(filter #(= '~prop (:name %)) (members-of-object ~object)))
-
-(defn names-of-members [object]
-  (sort (distinct (map :name (members-of-object object)))))
+(defn keywords-to-str-array [strs]
+  (into-array String (map name strs)))

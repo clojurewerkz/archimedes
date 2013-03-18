@@ -3,7 +3,7 @@
   (:import (com.tinkerpop.blueprints Vertex Direction)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
   (:require [archimedes.core :refer (*graph* *pre-fn*)]
-            [archimedes.util :refer (immigrate)]
+            [archimedes.util :refer (immigrate keywords-to-str-array)]
             [archimedes.conversion :refer (to-edge-direction)]))
 
 (immigrate 'archimedes.element)
@@ -58,35 +58,35 @@
 
 (defn edges-of
   "Returns edges that this vertex is part of with direction and with given labels"
-  [^Vertex v direction labels]
-  (.getEdges v (to-edge-direction direction) (into-array String labels)))
+  [^Vertex v direction & labels]
+  (.getEdges v (to-edge-direction direction) (keywords-to-str-array labels)))
 
 (defn all-edges-of
   "Returns edges that this vertex is part of, with given labels"
   [^Vertex v labels]
-  (.getEdges v Direction/BOTH (into-array String labels)))
+  (.getEdges v Direction/BOTH (keywords-to-str-array labels)))
 
 (defn outgoing-edges-of
   "Returns outgoing (outbound) edges that this vertex is part of, with given labels"
   [^Vertex v labels]
-  (.getEdges v Direction/OUT (into-array String labels)))
+  (.getEdges v Direction/OUT (keywords-to-str-array labels)))
 
 (defn incoming-edges-of
   "Returns incoming (inbound) edges that this vertex is part of, with given labels"
   [^Vertex v labels]
-  (.getEdges v Direction/IN (into-array String labels)))
+  (.getEdges v Direction/IN (keywords-to-str-array labels)))
 
 (defn connected-vertices-of
   [^Vertex v direction labels]
-  (.getVertices v (to-edge-direction direction) (into-array String labels)))
+  (.getVertices v (to-edge-direction direction) (keywords-to-str-array labels)))
 
 (defn connected-out-vertices
   [^Vertex v labels]
-  (.getVertices v Direction/OUT (into-array String labels)))
+  (.getVertices v Direction/OUT (keywords-to-str-array labels)))
 
 (defn connected-in-vertices
   [^Vertex v labels]
-  (.getVertices v Direction/IN (into-array String labels)))
+  (.getVertices v Direction/IN (keywords-to-str-array labels)))
 
 ;;
 ;; Creation methods
