@@ -33,6 +33,11 @@
 ;;
 ;;Information getters
 ;;
+(defn ^Edge find-by-id
+  "Looks up an edge by id"
+  [id]
+  (.getEdge *graph* id))
+
 (defn label-of
   "Get the label of the edge"
   [edge]
