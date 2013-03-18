@@ -1,6 +1,6 @@
 (ns archimedes.conversion
   (:refer-clojure :exclude [keys vals assoc! dissoc! get find])
-  (:import [com.tinkerpop.blueprints Direction]))
+  (:import [com.tinkerpop.blueprints Direction Query$Compare]))
 
 
 (defprotocol EdgeDirectionConversion
@@ -21,3 +21,12 @@
   Direction
   (to-edge-direction [input]
     input))
+
+(defn convert-symbol-to-compare [s]
+  (case s
+    =    Query$Compare/EQUAL
+    not= Query$Compare/NOT_EQUAL
+    >=   Query$Compare/GREATER_THAN_EQUAL
+    >    Query$Compare/GREATER_THAN
+    <=   Query$Compare/LESS_THAN_EQUAL
+    <    Query$Compare/LESS_THAN))
