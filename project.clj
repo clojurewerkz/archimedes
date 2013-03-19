@@ -1,4 +1,4 @@
-(defproject zmaril/archimedes "0.0.8"
+(defproject zmaril/archimedes "0.0.9"
   :description "Clojure wrapper for blueprints"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
