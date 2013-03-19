@@ -65,6 +65,16 @@
     (is (= #{"B" "C"}
            (set (map #(v/get % :name) (v/find-by-kv :age 2)))))))
 
+(deftest test-find-by-kv
+  (g/use-clean-graph!)
+  (let [v1 (v/create-with-id! 100 {:age  1
+                                   :name "A"})
+        v2 (v/create-with-id! 101 {:age 2
+                                   :name "B"})
+        v3 (v/create-with-id! 102 {:age 2
+                                   :name "C"})]
+    (is (= #{v1 v2 v3} (v/get-all-vertices)))))
+
 (deftest test-adjacent-object-retriveal
   (g/use-clean-graph!)
   (let [v1 (v/create-with-id! 100 {:age  1

@@ -56,44 +56,59 @@
   (*pre-fn*)
   (set (.getVertices *graph* (name k) v)))
 
+(defn get-all-vertices
+  "Given a key and a value, returns the set of all vertices that
+   sastify the pair."
+  []
+  (*pre-fn*)
+  (set (.getVertices *graph*)))
+
 (defn edges-of
   "Returns edges that this vertex is part of with direction and with given labels"
   [^Vertex v direction & labels]
+  (*pre-fn*)  
   (.getEdges v (to-edge-direction direction) (keywords-to-str-array labels)))
 
 (defn all-edges-of
   "Returns edges that this vertex is part of, with given labels"
   [^Vertex v & labels]
+  (*pre-fn*)
   (.getEdges v Direction/BOTH (keywords-to-str-array labels)))
 
 (defn outgoing-edges-of
   "Returns outgoing (outbound) edges that this vertex is part of, with given labels"
   [^Vertex v & labels]
+  (*pre-fn*)  
   (.getEdges v Direction/OUT (keywords-to-str-array labels)))
 
 (defn incoming-edges-of
   "Returns incoming (inbound) edges that this vertex is part of, with given labels"
   [^Vertex v & labels]
+  (*pre-fn*)  
   (.getEdges v Direction/IN (keywords-to-str-array labels)))
 
 (defn connected-vertices-of
   "Returns vertices connected to this vertex with a certain direction by the given labels"
   [^Vertex v direction & labels]
+  (*pre-fn*)  
   (.getVertices v (to-edge-direction direction) (keywords-to-str-array labels)))
 
 (defn connected-out-vertices
   "Returns vertices connected to this vertex by an outbound edge with the given labels"
   [^Vertex v & labels]
+  (*pre-fn*)  
   (.getVertices v Direction/OUT (keywords-to-str-array labels)))
 
 (defn connected-in-vertices
   "Returns vertices connected to this vertex by an inbound edge with the given labels"  
   [^Vertex v & labels]
+  (*pre-fn*)  
   (.getVertices v Direction/IN (keywords-to-str-array labels)))
 
 (defn all-connected-vertices
   "Returns vertices connected to this vertex with the given labels"  
   [^Vertex v & labels]
+  (*pre-fn*)  
   (.getVertices v Direction/BOTH (keywords-to-str-array labels)))
 
 ;;
