@@ -3,10 +3,21 @@
   (:import (com.tinkerpop.blueprints Vertex Direction)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
   (:require [archimedes.core :refer (*graph* *pre-fn*)]
-            [archimedes.util :refer (immigrate keywords-to-str-array)]
-            [archimedes.conversion :refer (to-edge-direction)]))
+            [archimedes.util :refer (keywords-to-str-array)]
+            [archimedes.conversion :refer (to-edge-direction)]
+            [potemkin :as po]
+            [archimedes.element :as ele]))
 
-(immigrate 'archimedes.element)
+(po/import-fn ele/get)
+(po/import-fn ele/keys)
+(po/import-fn ele/vals)
+(po/import-fn ele/id-of)
+(po/import-fn ele/assoc!)
+(po/import-fn ele/merge!)
+(po/import-fn ele/dissoc!)
+(po/import-fn ele/update!)
+(po/import-fn ele/clear!)
+
 
 ;;
 ;; Transaction management

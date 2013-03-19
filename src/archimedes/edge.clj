@@ -5,10 +5,19 @@
   (:require [archimedes.vertex :as v]
             [archimedes.core :refer (*graph* *pre-fn*)]
             [archimedes.conversion :refer (to-edge-direction)]            
-            [archimedes.util :refer (immigrate)]
-            [ogre.core :as q]))
+            [ogre.core :as q]
+            [potemkin :as po]
+            [archimedes.element :as ele]))
 
-(immigrate 'archimedes.element)
+(po/import-fn ele/get)
+(po/import-fn ele/keys)
+(po/import-fn ele/vals)
+(po/import-fn ele/id-of)
+(po/import-fn ele/assoc!)
+(po/import-fn ele/merge!)
+(po/import-fn ele/dissoc!)
+(po/import-fn ele/update!)
+(po/import-fn ele/clear!)
 
 ;;
 ;;Transaction management
@@ -33,10 +42,6 @@
 ;;
 ;;Information getters
 ;;
-(defn ^Edge find-by-id
-  "Looks up an edge by id"
-  [id]
-  (.getEdge *graph* id))
 
 (defn label-of
   "Get the label of the edge"
