@@ -45,9 +45,9 @@
   [f]
   (if (get-feature "supportsTransactions")
     (try
-      (let [^TransactionalGraph tx (.startTransaction ^TransactionalGraph *graph*)
+      (let [tx (.startTransaction ^TransactionalGraph *graph*)
             results                (binding [*graph* tx] (f))]
-        (.commit tx)
+        (.commit ^TransactionalGraph tx)
         (.stopTransaction ^TransactionalGraph *graph* TransactionalGraph$Conclusion/SUCCESS)
         results)
       (catch Exception e
