@@ -1,6 +1,6 @@
 (ns archimedes.vertex
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
-  (:import (com.tinkerpop.blueprints Vertex Direction)
+  (:import (com.tinkerpop.blueprints Vertex Direction Graph)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
   (:require [archimedes.core :refer (*graph* *pre-fn*)]
             [archimedes.util :refer (keywords-to-str-array)]
@@ -27,7 +27,7 @@
   "Gets a vertex back from the database and refreshes it to be usable again."
   [vertex]
   (*pre-fn*)
-  (.getVertex *graph* vertex))
+  (.getVertex ^Graph *graph* vertex))
 
 ;;
 ;; Deletion methods
@@ -37,7 +37,7 @@
   "Delete a vertex."
   [vertex]
   (*pre-fn*)
-  (.removeVertex *graph* vertex))
+  (.removeVertex ^Graph *graph* vertex))
 
 
 ;;
@@ -57,22 +57,22 @@
   [& ids]
   (*pre-fn*)
   (if (= 1 (count ids))
-    (.getVertex *graph* (first ids))
-    (seq (for [id ids] (.getVertex *graph* id)))))
+    (.getVertex ^Graph *graph* (first ids))
+    (seq (for [id ids] (.getVertex ^Graph *graph* id)))))
 
 (defn find-by-kv
   "Given a key and a value, returns the set of all vertices that
    sastify the pair."
   [k v]
   (*pre-fn*)
-  (set (.getVertices *graph* (name k) v)))
+  (set (.getVertices ^Graph *graph* (name k) v)))
 
 (defn get-all-vertices
   "Given a key and a value, returns the set of all vertices that
    sastify the pair."
   []
   (*pre-fn*)
-  (set (.getVertices *graph*)))
+  (set (.getVertices ^Graph *graph*)))
 
 (defn edges-of
   "Returns edges that this vertex is part of with direction and with given labels"
@@ -128,18 +128,20 @@
 
 (defn create!  
   "Create a vertex, optionally with the given property map."
-  ([] (create! {}))
+  ([]
+     (create! {}))
   ([data]
      (*pre-fn*)
-     (let [new-vertex (.addVertex *graph*)]
+     (let [^Vertex new-vertex (.addVertex ^Graph *graph* nil)]
        (merge! new-vertex data))))
 
 (defn create-with-id!  
   "Create a vertex, optionally with the given property map."
-  ([id] (create-with-id! id {}))
+  ([id]
+     (create-with-id! id {}))
   ([id data]
      (*pre-fn*)
-     (let [new-vertex (.addVertex *graph* id)]
+     (let [^Vertex new-vertex (.addVertex ^Graph *graph* id)]
        (merge! new-vertex data))))
 
 (defn upsert!
