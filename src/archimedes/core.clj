@@ -5,16 +5,20 @@
 (def ^{:dynamic true} *graph*)
 (def ^{:dynamic true} *pre-fn* (fn []))
 
-(defn set-pre-fn! [f]
+(defn set-pre-fn!
+  [f]
   (alter-var-root (var *pre-fn*) (constantly f)))
 
-(defn set-graph! [g]
+(defn set-graph!
+  [g]
   (alter-var-root (var *graph*) (constantly g)))
 
-(defn use-new-tinkergraph! []
+(defn use-new-tinkergraph!
+  []
   (set-graph! (TinkerGraphFactory/createTinkerGraph)))
 
-(defn use-clean-graph! []
+(defn use-clean-graph!
+  []
   (use-new-tinkergraph!)
   (doseq [e (seq (.getEdges ^Graph *graph*))]
     (.removeEdge ^Graph *graph* e))
@@ -37,7 +41,8 @@
   [s]
   (get ^Map (get-features) s))
 
-(defn- transact!* [f]
+(defn- transact!*
+  [f]
   (if (get-feature "supportsTransactions")
     (try
       (let [^TransactionalGraph tx (.startTransaction ^TransactionalGraph *graph*)
@@ -51,11 +56,13 @@
     ;; Transactions not supported.
     (f)))
 
-(defmacro transact! [& forms]
+(defmacro transact!
+  [& forms]
   "Perform graph operations inside a transaction."
   `(~transact!* (fn [] ~@forms)))
 
-(defn- retry-transact!* [max-retries wait-time-fn try-count f]
+(defn- retry-transact!*
+  [max-retries wait-time-fn try-count f]
   (let [res (try {:value (transact!* f)}
                  (catch Exception e
                    {:exception e}))]
@@ -67,7 +74,8 @@
           (Thread/sleep wait-time)
           (recur max-retries wait-time-fn (inc try-count) f))))))
 
-(defmacro retry-transact! [max-retries wait-time & forms]
+(defmacro retry-transact!
+  [max-retries wait-time & forms]
   "Perform graph operations inside a transaction.  The transaction will retry up
   to `max-retries` times.  `wait-time` can be an integer corresponding to the
   number of milliseconds to wait before each try, or it can be a function that
