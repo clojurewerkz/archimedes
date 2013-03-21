@@ -1,6 +1,6 @@
 (ns archimedes.edge
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
-  (:import (com.tinkerpop.blueprints Vertex Edge Direction)
+  (:import (com.tinkerpop.blueprints Vertex Edge Direction Graph)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
   (:require [archimedes.vertex :as v]
             [archimedes.core :refer (*graph* *pre-fn*)]
@@ -25,33 +25,33 @@
 
 (defn refresh
   "Goes and grabs the edge from the graph again. Useful for \"refreshing\" stale edges."
-  [edge]
+  [^Edge edge]
   (*pre-fn*)
-   (.getEdge *graph* (.getId edge)))
+   (.getEdge ^Graph *graph* (.getId edge)))
 
 ;;
-;;Deletion methods
+;; Deletion methods
 ;;
 
 (defn delete!
   "Delete an edge."
-  [edge]
+  [^Edge edge]
   (*pre-fn*)
-  (.removeEdge *graph* edge))
+  (.removeEdge ^Graph *graph* edge))
 
 ;;
-;;Information getters
+;; Information getters
 ;;
 
 (defn label-of
   "Get the label of the edge"
-  [edge]
+  [^Edge edge]
   (*pre-fn*)
   (keyword (.getLabel edge)))
 
 (defn to-map
   "Returns a persisten map representing the edge."
-  [edge]
+  [^Edge edge]
   (*pre-fn*)
   (->> (keys edge)
        (map #(vector (keyword %) (get edge %)))
@@ -62,8 +62,8 @@
   [& ids]
   (*pre-fn*)
   (if (= 1 (count ids))
-                (.getEdge *graph* (first ids))
-                (seq (for [id ids] (.getEdge *graph* id)))))
+                (.getEdge ^Graph *graph* (first ids))
+                (seq (for [id ids] (.getEdge ^Graph *graph* id)))))
 
 (defn ^Vertex get-vertex
   "Get the vertex of the edge in a certain direction."
@@ -82,22 +82,23 @@
 
 (defn endpoints
   "Returns the endpoints of the edge in array with the order [starting-node,ending-node]."
-  [edge]
+  [^Edge edge]
   (*pre-fn*)
   [(.getVertex edge Direction/OUT)
    (.getVertex edge Direction/IN)])
 
 (defn edges-between
   "Returns a set of the edges between two vertices, direction considered."
-  ([v1 v2] (edges-between v1 nil v2))
-  ([v1 label v2]
+  ([^Vertex v1 ^Vertex v2]
+     (edges-between v1 nil v2))
+  ([^Vertex v1 label ^Vertex v2]
      (*pre-fn*)
      ;; Source for these edge queries:
      ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
-     (let [edges-set (q/query v1 
+     (let [^Edge edges-set (q/query v1 
                              (q/--E> label)
                               q/in-vertex
-                              (q/has "id" (.getId v2))
+                              (q/has "id" ^Object (.getId v2))
                               (q/back 2)
                               (q/into-vec!))]
        (when (not (empty? edges-set))
@@ -106,29 +107,32 @@
 (defn connected?
   "Returns whether or not two vertices are connected. Optional third
    arguement specifying the label of the edge."
-  ([v1 v2] (connected? v1 nil v2))  
-  ([v1 label v2]
+  ([^Vertex v1 ^Vertex v2]
+     (connected? v1 nil v2))  
+  ([^Vertex v1 label ^Vertex v2]
      (*pre-fn*)
      (not (empty? (edges-between v1 label v2)))))
 
 ;;
-;;Creation methods
+;; Creation methods
 ;;
 
 (defn connect!
   "Connects two vertices with the given label, and, optionally, with the given properties."
-  ([v1 label v2] (connect! v1 label v2 {}))
-  ([v1 label v2 data]
+  ([^Vertex v1 label ^Vertex v2]
+     (connect! v1 label v2 {}))
+  ([^Vertex v1 label ^Vertex v2 data]
      (*pre-fn*)
-     (let [new-edge (.addEdge *graph* v1 v2 (name label))]
+     (let [new-edge (.addEdge ^Graph *graph* v1 v2 ^String (name label))]
        (merge! new-edge data))))
 
 (defn connect-with-id!
   "Connects two vertices with the given label, and, optionally, with the given properties."
-  ([id v1 label v2] (connect-with-id! id v1 label v2 {}))
-  ([id v1 label v2 data]
+  ([id ^Vertex v1 label ^Vertex v2]
+     (connect-with-id! id v1 label v2 {}))
+  ([id ^Vertex v1 label ^Vertex v2 data]
      (*pre-fn*)
-     (let [new-edge (.addEdge *graph* id v1 v2 (name label))]
+     (let [new-edge (.addEdge ^Graph *graph* id v1 v2 ^String (name label))]
        (merge! new-edge data))))
 
 (defn upconnect!
@@ -136,12 +140,13 @@
    given label and, if the data is provided, merges the data with the
    current properties of the edge. If no such edge exists, then an
    edge is created with the given data."
-  ([v1 label v2] (upconnect! v1 name v2 {}))
-  ([v1 label v2 data]
+  ([^Vertex v1 label ^Vertex v2]
+     (upconnect! v1 name v2 {}))
+  ([^Vertex v1 label ^Vertex v2 data]
      (*pre-fn*)
-     (if-let [edges (edges-between v1 label v2)]
+     (if-let [^Edge edges (edges-between v1 label v2)]
        (do
-         (doseq [edge edges] (merge! edge data))
+         (doseq [^Edge edge edges] (merge! edge data))
          edges)
        #{(connect! v1 label v2 data)})))
 
@@ -162,12 +167,13 @@
    given label and, if the data is provided, merges the data with the
    current properties of the edge. If no such edge exists, then an
    edge is created with the given data."
-  ([id v1 label v2] (upconnect-with-id! id v1 label v2 {}))
-  ([id v1 label v2 data]
+  ([id ^Vertex v1 label ^Vertex v2]
+     (upconnect-with-id! id v1 label v2 {}))
+  ([id ^Vertex v1 label ^Vertex v2 data]
      (*pre-fn*)
-     (if-let [edges (edges-between v1 label v2)]
+     (if-let [^Edge edges (edges-between v1 label v2)]
        (do
-         (doseq [edge edges] (merge! edge data))
+         (doseq [^Edge edge edges] (merge! edge data))
          edges)
        #{(connect-with-id! id v1 label v2 data)})))
 
