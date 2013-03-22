@@ -1,5 +1,6 @@
 (ns archimedes.core
-  (:import (com.tinkerpop.blueprints Element Graph TransactionalGraph TransactionalGraph$Conclusion)
+  (:import (com.tinkerpop.blueprints Element Graph TransactionalGraph
+                                     TransactionalGraph$Conclusion)
            (com.tinkerpop.blueprints.impls.tg TinkerGraphFactory)))
 
 (def ^{:dynamic true} *graph*)
@@ -45,7 +46,7 @@
   [f]
   (if (get-feature "supportsTransactions")
     (try
-      (let [tx (.startTransaction ^TransactionalGraph *graph*)
+      (let [tx (.newTransaction ^TransactionalGraph *graph*)
             results                (binding [*graph* tx] (f))]
         (.commit ^TransactionalGraph tx)
         (.stopTransaction ^TransactionalGraph *graph* TransactionalGraph$Conclusion/SUCCESS)
