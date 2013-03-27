@@ -1,4 +1,4 @@
-(defproject zmaril/archimedes "1.0.0-alpha2"
+(defproject zmaril/archimedes "1.0.0-alpha3-SNAPSHOT"
   :description "Clojure wrapper for Tinkerpop Blueprints"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
