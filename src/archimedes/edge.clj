@@ -65,6 +65,12 @@
                 (.getEdge ^Graph *graph* (first ids))
                 (seq (for [id ids] (.getEdge ^Graph *graph* id)))))
 
+(defn get-all-edges
+  "Returns all edges."
+  []
+  (*pre-fn*)
+  (set (.getVertices ^Graph *graph*)))
+
 (defn ^Vertex get-vertex
   "Get the vertex of the edge in a certain direction."
   [^Edge e direction]

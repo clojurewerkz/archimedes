@@ -68,8 +68,7 @@
   (set (.getVertices ^Graph *graph* (name k) v)))
 
 (defn get-all-vertices
-  "Given a key and a value, returns the set of all vertices that
-   sastify the pair."
+  "Returns all vertices."
   []
   (*pre-fn*)
   (set (.getVertices ^Graph *graph*)))

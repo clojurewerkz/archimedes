@@ -6,6 +6,9 @@
 (def ^{:dynamic true} *graph*)
 (def ^{:dynamic true} *pre-fn* (fn []))
 
+(defn get-graph []
+  *graph*)
+
 (defn set-pre-fn!
   [f]
   (alter-var-root (var *pre-fn*) (constantly f)))
