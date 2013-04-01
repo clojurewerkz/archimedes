@@ -28,9 +28,7 @@
   ;;Important when using types. You aren't ever going to change a
   ;;user's id for example.
   (doseq [[key value] (partition 2 kvs)]
-    (when (not= value (get elem (name key)))
-      (.removeProperty elem (name key)) ;;Hacky work around! Yuck!
-      (.setProperty elem (name key) value)))
+      (.setProperty elem (name key) value))
   elem)
 
 (defn merge!

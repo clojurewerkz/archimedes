@@ -6,6 +6,11 @@
 (def ^{:dynamic true} *graph*)
 (def ^{:dynamic true} *pre-fn* (fn []))
 
+(def ^{:dynamic true} *enable-historical-reenactment-mode* false)
+
+(defn flip-reenactment-bit! []
+  (alter-var-root (var *enable-historical-reenactment-mode*) (fn [t] (not t))))
+
 (defn get-graph []
   *graph*)
 
@@ -13,8 +18,12 @@
   [f]
   (alter-var-root (var *pre-fn*) (constantly f)))
 
+
+
 (defn set-graph!
   [g]
+  (when *enable-historical-reenactment-mode* 
+    (println "EUREKA!"))
   (alter-var-root (var *graph*) (constantly g)))
 
 (defn use-new-tinkergraph!

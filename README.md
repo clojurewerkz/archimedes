@@ -12,18 +12,8 @@ Archimedes is a Clojure library for working with graphs that conform to the [Tin
 
 ## Community
 
-[Archimedes has a mailing list](https://groups.google.com/forum/#!forum/clojure-titanium).
+[Archimedes has a mailing list](https://groups.google.com/forum/?fromgroups#!forum/gremlin-users)
 Feel free to join it and ask any questions you may have.
-
-
-## Project Maturity
-
-Archimedes is *very* young and incomplete. We put it on GitHub to gather feedback. For now, please consider using
-a mature library such as [Neocons](http://clojureneo4j.info) instead.
-
-As the project matures, we will update this section.
-
-
 
 ## Artifacts
 
@@ -41,7 +31,7 @@ definition to your `pom.xml`:
 
 With Leiningen:
 
-    [zmaril/archimedes "1.0.0-alpha1"]
+    [zmaril/archimedes "1.0.0-alpha2"]
 
 
 With Maven:
@@ -49,7 +39,7 @@ With Maven:
     <dependency>
       <groupId>zmaril</groupId>
       <artifactId>archimedes</artifactId>
-      <version>1.0.0-alpha1</version>
+      <version>1.0.0-alpha2</version>
     </dependency>
 
 
@@ -62,12 +52,6 @@ Archimedes documentation guides are not ready yet.
 
 Our [test suite](test/archimedes) has many code examples.
 
-
-### Mailing List
-
-Don't hesitate to join our [mailing list](https://groups.google.com/forum/#!forum/clojure-titanium) and ask questions!
-
-
 ## Supported Clojure Versions
 
 Archimedes is built from the ground up for Clojure 1.4 and up. The most recent stable release
@@ -77,7 +61,6 @@ is always recommended.
 ## Continuous Integration
 
 TBD: add it to travis-ci.org.
-
 
 
 ## Development
@@ -97,6 +80,3 @@ on Github.
 Copyright (C) 2013 Zack Maril
 
 Licensed under the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html) (the same as Clojure).
-
-[Titan](http://thinkaurelius.github.com/titan/) is licensed under the [Apache Public License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
-
