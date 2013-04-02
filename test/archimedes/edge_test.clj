@@ -81,6 +81,16 @@
     (is (= (e/to-map edge) (e/to-map fresh-edge)))))
 
 (deftest test-upconnect!
+  (testing "Upconnecting once without data"
+    (g/use-clean-graph!)
+    (let [v1 (v/create-with-id! 100 {:name "v1"})
+          v2 (v/create-with-id! 101 {:name "v2"})
+          edge (e/unique-upconnect-with-id! 102 v1 :connexion v2)]
+      (is (e/connected? v1 v2))
+      (is (e/connected? v1 :connexion v2))
+      (is (not (e/connected? v2 v1)))
+      (is (= 1 (count (seq (.getEdges g/*graph*)))))))
+
   (testing "Upconnecting once"
     (g/use-clean-graph!)
     (let [v1 (v/create-with-id! 100 {:name "v1"})

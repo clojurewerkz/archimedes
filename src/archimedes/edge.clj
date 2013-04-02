@@ -147,7 +147,7 @@
    current properties of the edge. If no such edge exists, then an
    edge is created with the given data."
   ([^Vertex v1 label ^Vertex v2]
-     (upconnect! v1 name v2 {}))
+     (upconnect! v1 label v2 {}))
   ([^Vertex v1 label ^Vertex v2 data]
      (*pre-fn*)
      (if-let [^Edge edges (edges-between v1 label v2)]
