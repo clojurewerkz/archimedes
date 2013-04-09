@@ -69,7 +69,7 @@
   "Returns all edges."
   []
   (*pre-fn*)
-  (set (.getVertices ^Graph *graph*)))
+  (set (.getEdges ^Graph *graph*)))
 
 (defn ^Vertex get-vertex
   "Get the vertex of the edge in a certain direction."

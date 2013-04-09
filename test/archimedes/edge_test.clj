@@ -33,6 +33,15 @@
     (is (= 2 (e/get edge :b)))
     (is (= 3 (e/get edge :c)))))
 
+(deftest test-get-all-edges
+  (g/use-clean-graph!)
+  (let [v1 (v/create-with-id! 100 {:name "v1"})
+        v2 (v/create-with-id! 101 {:name "v2"})
+        edge (e/connect-with-id! 102 v1 :test v2  {:a 0})
+        edge (e/connect-with-id! 103 v1 :test v2  {:a 1})
+        edge (e/connect-with-id! 104 v1 :test v2  {:a 2})]
+    (is (= 3 (count (e/get-all-edges))))))
+
 (deftest test-to-map
   (g/use-clean-graph!)
   (let [v1 (v/create-with-id! 100 {:name "v1"})
