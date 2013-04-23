@@ -30,11 +30,11 @@
   (.getVertex ^Graph *graph* vertex))
 
 ;;
-;; Deletion methods
+;; Removal methods
 ;;
 
-(defn delete!  
-  "Delete a vertex."
+(defn remove!  
+  "Remove a vertex."
   [vertex]
   (*pre-fn*)
   (.removeVertex ^Graph *graph* vertex))

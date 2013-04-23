@@ -7,7 +7,7 @@
 (deftest test-delete
   (g/use-clean-graph!)
   (let [u (v/create-with-id! 100 {:name "v1"})]
-    (v/delete! u)
+    (v/remove! u)
     (is (=  nil (v/find-by-id 100)))
     (is (empty? (v/find-by-kv :name "v1")))))
 

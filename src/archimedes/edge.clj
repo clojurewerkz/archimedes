@@ -30,11 +30,11 @@
    (.getEdge ^Graph *graph* (.getId edge)))
 
 ;;
-;; Deletion methods
+;; Removal methods
 ;;
 
-(defn delete!
-  "Delete an edge."
+(defn remove!
+  "Remove an edge."
   [^Edge edge]
   (*pre-fn*)
   (.removeEdge ^Graph *graph* edge))

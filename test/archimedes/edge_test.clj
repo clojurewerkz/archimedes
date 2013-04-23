@@ -10,7 +10,7 @@
         w (v/create-with-id! 101)
         a (e/connect-with-id! 102 u :test w)
         a-id (e/id-of a)]
-    (e/delete! a)
+    (e/remove! a)
     (is (=  nil (e/find-by-id a-id)))))
 
 (deftest test-simple-property-mutation
