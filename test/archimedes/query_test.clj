@@ -28,7 +28,7 @@
         _    (e/connect-with-id! 104 a :friend c)
         _    (e/connect-with-id! 105 a :remembers c)
         _    (e/connect-with-id! 106 c :remembers a)                
-        n    (q/count-edges a
+        n    (q/count a
                             (q/direction :out)
                             (q/labels :friend :remembers))]    
     (is (= 3 n))))
@@ -40,15 +40,15 @@
         c    (v/create-with-id!  102 {:name "Thomas" :age 38})        
         _    (e/connect-with-id! 103 a :friend b {:age 28})
         _    (e/connect-with-id! 104 a :friend c {:age 30})
-        n1   (q/count-edges a
+        n1   (q/count a
                             (q/direction :out)
                             (q/labels :friend)
                             (q/has :age 28))
-        n2   (q/count-edges a
+        n2   (q/count a
                             (q/direction :out)
                             (q/labels :friend)
                             (q/has :age 29))
-        n3   (q/count-edges a
+        n3   (q/count a
                             (q/direction :out)
                             (q/labels :hates)
                             (q/has :age 28))]
@@ -63,15 +63,15 @@
         c    (v/create-with-id!  102 {:name "Thomas" :age 38})        
         _    (e/connect-with-id! 103 a :friend b {:age 28})
         _    (e/connect-with-id! 104 a :friend c {:age 30})
-        n1   (q/count-edges a
+        n1   (q/count a
                             (q/direction :out)
                             (q/labels :friend)
                             (q/has :age >= 28))
-        n2   (q/count-edges a
+        n2   (q/count a
                             (q/direction :out)
                             (q/labels :friend)
                             (q/has :age >= 29))
-        n3   (q/count-edges a
+        n3   (q/count a
                             (q/direction :out)
                             (q/labels :hates)
                             (q/has :age >= 28))]
@@ -86,15 +86,15 @@
         c    (v/create-with-id!  102 {:name "Thomas" :age 38})        
         _    (e/connect-with-id! 103 a :friend b {:age 28})
         _    (e/connect-with-id! 104 a :friend c {:age 30})
-        n1   (q/count-edges a
+        n1   (q/count a
                             (q/direction :out)
                             (q/labels :friend)
                             (q/has :age <= 28))
-        n2   (q/count-edges a
+        n2   (q/count a
                             (q/direction :out)
                             (q/labels :friend)
                             (q/has :age <= 29))
-        n3   (q/count-edges a
+        n3   (q/count a
                             (q/direction :out)
                             (q/labels :hates)
                             (q/has :age <= 28))]

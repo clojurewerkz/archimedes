@@ -1,4 +1,5 @@
 (ns archimedes.query
+  (:refer-clojure :exclude [count])
   (:require [archimedes.conversion :refer (convert-symbol-to-compare to-edge-direction)])
   (:import  [com.tinkerpop.blueprints Vertex Edge Direction Query]))
 
@@ -44,7 +45,7 @@
   `(let [^com.tinkerpop.blueprints.Query query# (-> (start-at ~starting-point) ~@body)]
      (into [] (.edges query#))))
 
-(defmacro ^long count-edges
+(defmacro ^long count
   [^Vertex starting-point & body]
   `(let [^com.tinkerpop.blueprints.Query query# (-> (start-at ~starting-point) ~@body)]
      (.count query#)))
