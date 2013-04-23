@@ -102,11 +102,11 @@
      ;; Source for these edge queries:
      ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
      (let [^Edge edges-set (q/query v1 
-                             (q/--E> label)
-                              q/in-vertex
-                              (q/has "id" ^Object (.getId v2))
-                              (q/back 2)
-                              (q/into-vec!))]
+                                    (q/--E> [label])
+                                    q/in-vertex
+                                    (q/has "id" ^Object (.getId v2))
+                                    (q/back 2)
+                                    (q/into-vec!))]
        (when (not (empty? edges-set))
          edges-set))))
 
