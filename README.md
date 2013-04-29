@@ -31,7 +31,7 @@ definition to your `pom.xml`:
 
 With Leiningen:
 
-    [zmaril/archimedes "1.0.0-alpha2"]
+    [zmaril/archimedes "1.0.0-alpha4"]
 
 
 With Maven:
@@ -39,7 +39,7 @@ With Maven:
     <dependency>
       <groupId>zmaril</groupId>
       <artifactId>archimedes</artifactId>
-      <version>1.0.0-alpha2</version>
+      <version>1.0.0-alpha4</version>
     </dependency>
 
 
