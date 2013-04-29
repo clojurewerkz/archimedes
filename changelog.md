@@ -1,6 +1,6 @@
 ## Changes in 1.0.0-alpha4
 
-* Using Ogre 2.3.0.2.
+* Bug fix for using Ogre.
 
 ## Changes in 1.0.0-alpha3
 
