@@ -3,7 +3,7 @@
                                      TransactionalGraph$Conclusion)
            (com.tinkerpop.blueprints.impls.tg TinkerGraphFactory)))
 
-(def ^{:dynamic true} *graph*)
+(def ^{:dynamic true} *graph* nil)
 (def ^{:dynamic true} *pre-fn* (fn []))
 
 (def ^{:dynamic true} *enable-historical-reenactment-mode* false)
