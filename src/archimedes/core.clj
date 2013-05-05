@@ -18,8 +18,6 @@
   [f]
   (alter-var-root (var *pre-fn*) (constantly f)))
 
-
-
 (defn set-graph!
   [g]
   (when *enable-historical-reenactment-mode* 
@@ -100,7 +98,7 @@
      (~retry-transact!* ~max-retries wait-time-fn# 1 (fn [] ~@forms))))
 
 (defmacro with-graph
-  "Perform graph operations against a specific graph."
+  "Perform graph operations on a given graph."
   [g & forms]
   `(binding [*graph* ~g]
      ~@forms))
