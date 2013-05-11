@@ -1,14 +1,64 @@
 (ns archimedes.core
   (:import (com.tinkerpop.blueprints Element Graph TransactionalGraph
+                                     ThreadedTransactionalGraph
                                      TransactionalGraph$Conclusion)
            (com.tinkerpop.blueprints.impls.tg TinkerGraphFactory)))
 
-(def ^{:dynamic true} *graph* nil)
-(def ^{:dynamic true} *pre-fn* (fn []))
+(def ^{:dynamic true} *graph*
+  nil)
 
-(def ^{:dynamic true} *enable-historical-reenactment-mode* false)
+(def ^{:dynamic true} *pre-fn* 
+  (fn []))
 
-(defn flip-reenactment-bit! []
+(def ^{:dynamic true} transact!* 
+  (fn [f] (throw (Throwable. 
+                  "Please set the graph with set-graph! so Archimedes
+                  can infer how to do transactions correctly."))))
+
+(defn- threaded-transact!*
+  "Creates a new transaction, executes the given function. If
+  successful, commits the changes and returns the results. If an error
+  is thrown, then it rolls back changes and bubbles the error up." 
+  [f]
+  (let [tx (.newTransaction ^TransactionalGraph *graph*)]
+    (try
+      (let [results (binding [*graph* tx] (f))]
+        (.commit ^TransactionalGraph tx)         
+        results)
+      (catch Exception e
+        (.rollback tx)
+        (throw e)))))
+
+(defn- simple-transact!*  
+  "Executes the given function. If
+  successful, commits the changes and returns the results. If an error
+  is thrown, then it rolls back changes and bubbles the error up."
+  [f]
+  (try
+    (let [results (f)]
+      (.commit ^TransactionalGraph *graph*)         
+      results)
+    (catch Exception e
+      (.rollback *graph*)
+      (throw e))))
+
+(defn- infer-transact!*
+  "Infers which type of transaction to use for transact!* based on classes."
+  [_]
+  (cond
+   (instance? ThreadedTransactionalGraph *graph*)
+   threaded-transact!*
+   (instance? TransactionalGraph *graph*)
+   simple-transact!*
+   :else (fn [f] (f))))
+
+(def ^{:dynamic true} 
+  *enable-historical-reenactment-mode* 
+  false)
+
+(defn flip-reenactment-bit! 
+  "Don't use this, it's not web scale yet."
+  []
   (alter-var-root (var *enable-historical-reenactment-mode*) (fn [t] (not t))))
 
 (defn get-graph []
@@ -22,7 +72,8 @@
   [g]
   (when *enable-historical-reenactment-mode* 
     (println "EUREKA!"))
-  (alter-var-root (var *graph*) (constantly g)))
+  (alter-var-root (var *graph*) (constantly g))
+  (alter-var-root (var transact!*) infer-transact!*))
 
 (defn use-new-tinkergraph!
   []
@@ -51,21 +102,6 @@
   "Gets the value of the feature for a graph."
   [s]
   (get ^Map (get-features) s))
-
-(defn- transact!*
-  [f]
-  (if (get-feature "supportsTransactions")
-    (try
-      (let [tx (.newTransaction ^TransactionalGraph *graph*)
-            results                (binding [*graph* tx] (f))]
-        (.commit ^TransactionalGraph tx)
-        (.stopTransaction ^TransactionalGraph *graph* TransactionalGraph$Conclusion/SUCCESS)
-        results)
-      (catch Exception e
-        (.stopTransaction ^TransactionalGraph *graph* TransactionalGraph$Conclusion/FAILURE)
-        (throw e)))
-    ;; Transactions not supported.
-    (f)))
 
 (defmacro transact!
   [& forms]
