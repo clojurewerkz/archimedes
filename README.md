@@ -13,12 +13,17 @@ Archimedes is a Clojure library for working with graphs that conform to the [Tin
 ## Community
 
 [Archimedes has a mailing list](https://groups.google.com/forum/?fromgroups#!forum/gremlin-users)
-Feel free to join it and ask any questions you may have.
+Feel free to join it and ask any questions you may have. If you have
+any questions about Archimedes, ask
+[Zack on twitter](https://twitter.com/ZackMaril) or pop into
+`#clojurewerkz` on irc. 
 
 ## Artifacts
 
-Archimedes artifacts are [released to Clojars](https://clojars.org/zmaril/archimedes). If you are using Maven, add the following repository
-definition to your `pom.xml`:
+Archimedes artifacts are
+[released to Clojars](https://clojars.org/clojurewerkz/archimedes). If
+you are using Maven, add the following repository definition to your
+`pom.xml`:
 
 ``` xml
 <repository>
@@ -31,18 +36,16 @@ definition to your `pom.xml`:
 
 With Leiningen:
 
-    [zmaril/archimedes "1.0.0-alpha4"]
+    [clojurewerkz/archimedes "1.0.0-alpha4"]
 
 
 With Maven:
 
     <dependency>
-      <groupId>zmaril</groupId>
+      <groupId>clojurewerkz</groupId>
       <artifactId>archimedes</artifactId>
       <version>1.0.0-alpha4</version>
     </dependency>
-
-
 
 ## Documentation & Examples
 
@@ -65,13 +68,15 @@ TBD: add it to travis-ci.org.
 
 ## Development
 
-Archimedes uses [Leiningen 2](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md). Make sure you have it installed and then run tests against
-supported Clojure versions using
+Archimedes uses
+[Leiningen 2](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md).
+Make sure you have it installed and then run tests against supported
+Clojure versions using
 
     lein2 all test
 
-Then create a branch and make your changes on it. Once you are done with your changes and all tests pass, submit a pull request
-on Github.
+Then create a branch and make your changes on it. Once you are done
+with your changes and all tests pass, submit a pull request on Github.
 
 
 
