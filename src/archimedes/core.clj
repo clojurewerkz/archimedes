@@ -15,6 +15,19 @@
                   "Please set the graph with set-graph! so Archimedes
                   can infer how to do transactions correctly."))))
 
+(def ^{:dynamic true} *vertex-id-key*
+  :__id__)
+
+(def ^{:dynamic true} *edge-label-key*
+  :__label__)
+
+
+(defn set-vertex-id-key! [new-id]
+  (alter-var-root (var *vertex-id-key*) (constantly new-id)))
+
+(defn set-edge-label-key! [new-id]
+  (alter-var-root (var *edge-label-key*) (constantly new-id)))
+
 (defn- threaded-transact!*
   "Creates a new transaction, executes the given function. If
   successful, commits the changes and returns the results. If an error

@@ -3,7 +3,7 @@
   (:import (com.tinkerpop.blueprints Vertex Edge Direction Graph)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
   (:require [archimedes.vertex :as v]
-            [archimedes.core :refer (*graph* *pre-fn*)]
+            [archimedes.core :refer (*graph* *pre-fn* *vertex-id-key* *edge-label-key*)]
             [archimedes.conversion :refer (to-edge-direction)]            
             [ogre.core :as q]
             [potemkin :as po]
@@ -55,7 +55,7 @@
   (*pre-fn*)
   (->> (keys edge)
        (map #(vector (keyword %) (get edge %)))
-       (into {:__id__ (id-of edge) :__label__ (label-of edge)})))
+       (into {*vertex-id-key* (id-of edge) *edge-label-key* (label-of edge)})))
 
 (defn find-by-id
   "Retrieves edges by id from the graph."
