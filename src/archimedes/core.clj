@@ -18,15 +18,15 @@
 (def ^{:dynamic true} *vertex-id-key*
   :__id__)
 
-(def ^{:dynamic true} *edge-id-key*
+(def ^{:dynamic true} *edge-label-key*
   :__label__)
 
 
 (defn set-vertex-id-key! [new-id]
   (alter-var-root (var *vertex-id-key*) (constantly new-id)))
 
-(defn set-edge-id-key! [new-id]
-  (alter-var-root (var *edge-id-key*) (constantly new-id)))
+(defn set-edge-label-key! [new-id]
+  (alter-var-root (var *edge-label-key*) (constantly new-id)))
 
 (defn- threaded-transact!*
   "Creates a new transaction, executes the given function. If

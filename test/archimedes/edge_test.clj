@@ -56,7 +56,7 @@
         label :LABEL]
     (try
       (g/set-vertex-id-key! id)
-      (g/set-edge-id-key! label)
+      (g/set-edge-label-key! label)
       (let [v1 (v/create-with-id! 100 {:name "v1"})
             v2 (v/create-with-id! 101 {:name "v2"})
             edge (e/connect-with-id! 102 v1 :test v2 {:a 1 :b 2 :c 3})
@@ -64,7 +64,7 @@
       (is (= {:a 1 :b 2 :c 3 id "102" label :test}  prop-map)))
       (finally
         (g/set-vertex-id-key! :__id__)
-        (g/set-edge-id-key! :__label__)))))
+        (g/set-edge-label-key! :__label__)))))
 
 (deftest test-endpoints
   (g/use-clean-graph!)
