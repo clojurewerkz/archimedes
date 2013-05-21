@@ -53,9 +53,9 @@
 (deftest test-to-map-id
   (g/use-clean-graph!)
   (let [id :ID
-        label :LABEL]
+        label :LABEL]    
     (try
-      (g/set-vertex-id-key! id)
+      (g/set-element-id-key! id)
       (g/set-edge-label-key! label)
       (let [v1 (v/create-with-id! 100 {:name "v1"})
             v2 (v/create-with-id! 101 {:name "v2"})
@@ -63,7 +63,7 @@
             prop-map (e/to-map edge)]
       (is (= {:a 1 :b 2 :c 3 id "102" label :test}  prop-map)))
       (finally
-        (g/set-vertex-id-key! :__id__)
+        (g/set-element-id-key! :__id__)
         (g/set-edge-label-key! :__label__)))))
 
 (deftest test-endpoints

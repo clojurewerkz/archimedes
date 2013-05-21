@@ -41,7 +41,7 @@
   (g/use-clean-graph!)
   (let [id :ID]
     (try
-      (g/set-vertex-id-key! id)
+      (g/set-element-id-key! id)
       (let [v1 (v/create-with-id! 100 {:name "v1" :a 1 :b 2 :c 3})
             props (v/to-map v1)]
         (is (= "100" (props id)))
@@ -49,7 +49,7 @@
         (is (= 2 (props :b)))
         (is (= 3 (props :c))))
       (finally
-        (g/set-vertex-id-key! :__id__)))))
+        (g/set-element-id-key! :__id__)))))
 
 (deftest test-find-by-id-single
   (g/use-clean-graph!)

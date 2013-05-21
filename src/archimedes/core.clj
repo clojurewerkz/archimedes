@@ -15,15 +15,15 @@
                   "Please set the graph with set-graph! so Archimedes
                   can infer how to do transactions correctly."))))
 
-(def ^{:dynamic true} *vertex-id-key*
+(def ^{:dynamic true} *element-id-key*
   :__id__)
 
 (def ^{:dynamic true} *edge-label-key*
   :__label__)
 
 
-(defn set-vertex-id-key! [new-id]
-  (alter-var-root (var *vertex-id-key*) (constantly new-id)))
+(defn set-element-id-key! [new-id]
+  (alter-var-root (var *element-id-key*) (constantly new-id)))
 
 (defn set-edge-label-key! [new-id]
   (alter-var-root (var *edge-label-key*) (constantly new-id)))
