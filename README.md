@@ -36,7 +36,7 @@ you are using Maven, add the following repository definition to your
 
 With Leiningen:
 
-    [clojurewerkz/archimedes "1.0.0-alpha4"]
+    [clojurewerkz/archimedes "1.0.0-alpha5"]
 
 
 With Maven:
@@ -44,7 +44,7 @@ With Maven:
     <dependency>
       <groupId>clojurewerkz</groupId>
       <artifactId>archimedes</artifactId>
-      <version>1.0.0-alpha4</version>
+      <version>1.0.0-alpha5</version>
     </dependency>
 
 ## Documentation & Examples

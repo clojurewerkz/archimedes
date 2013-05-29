@@ -28,7 +28,7 @@
 (defn set-edge-label-key! [new-id]
   (alter-var-root (var *edge-label-key*) (constantly new-id)))
 
-(defn- threaded-transact!*
+(defn threaded-transact!*
   "Creates a new transaction, executes the given function. If
   successful, commits the changes and returns the results. If an error
   is thrown, then it rolls back changes and bubbles the error up." 
@@ -42,7 +42,7 @@
         (.rollback tx)
         (throw e)))))
 
-(defn- simple-transact!*  
+(defn simple-transact!*  
   "Executes the given function. If
   successful, commits the changes and returns the results. If an error
   is thrown, then it rolls back changes and bubbles the error up."
@@ -55,7 +55,7 @@
       (.rollback *graph*)
       (throw e))))
 
-(defn- infer-transact!*
+(defn infer-transact!*
   "Infers which type of transaction to use for transact!* based on classes."
   [_]
   (cond
