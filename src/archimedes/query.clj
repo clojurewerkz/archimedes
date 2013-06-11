@@ -29,7 +29,7 @@
 
 (defn labels
   [^Query q & coll]
-  (.labels q (into-array String (map name coll))))
+  (.labels q (into-array String (map name (filter identity coll)))))
 
 (defn limit
   [^Query q ^long max]

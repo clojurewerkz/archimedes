@@ -88,6 +88,22 @@
         edge (e/connect-with-id! 102 v1 :connexion v2)]
     (is (= v1 (e/tail-vertex edge)))))
 
+(deftest test-edges-between
+  (g/use-clean-graph!)
+  (let [v1   (v/create-with-id!  100 {:name "v1"})
+        v2   (v/create-with-id!  101 {:name "v2"})
+        v3   (v/create-with-id!  102 {:name "v3"})
+        e1   (e/connect-with-id! 103 v1 :connexion v2)
+        e2   (e/connect-with-id! 104 v1 :testing   v2)
+        e3   (e/connect-with-id! 105 v2 :connexion v1)
+        e4   (e/connect-with-id! 106 v2 :testing   v1)
+        e5   (e/connect-with-id! 107 v1 :testing   v3)
+        e5   (e/connect-with-id! 108 v2 :testing   v3)]
+    (is (= #{e1 e2} (e/edges-between v1 v2)))
+    (is (= #{e1} (e/edges-between v1 :connexion v2)))
+    (is (= nil (e/edges-between v1 :wrong v2)))
+    (is (= nil (e/edges-between v3 :wrong v1)))))
+
 (deftest test-head-vertex
   (g/use-clean-graph!)
   (let [v1   (v/create-with-id! 100 {:name "v1"})

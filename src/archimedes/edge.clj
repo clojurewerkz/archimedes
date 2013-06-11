@@ -5,7 +5,7 @@
   (:require [archimedes.vertex :as v]
             [archimedes.core :refer (*graph* *pre-fn* *element-id-key* *edge-label-key*)]
             [archimedes.conversion :refer (to-edge-direction)]            
-            [ogre.core :as q]
+            [archimedes.query :as q]
             [potemkin :as po]
             [archimedes.element :as ele]))
 
@@ -101,14 +101,13 @@
      (*pre-fn*)
      ;; Source for these edge queries:
      ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
-     (let [^Edge edges-set (q/query v1 
-                                    (q/--E> [label])
-                                    q/in-vertex
-                                    (q/has "id" ^Object (.getId v2))
-                                    (q/back 2)
-                                    (q/into-vec!))]
-       (when (not (empty? edges-set))
-         edges-set))))
+     (let [^Edge edges (q/find-edges v1 
+                                     (q/direction :out)
+                                     (q/labels label))
+           v2-id (.getId v2)
+           edge-set (set (filter #(= v2-id (.getId (.getVertex % (to-edge-direction :in)))) edges))]
+       (when (not (empty? edge-set))
+         edge-set))))
 
 (defn connected?
   "Returns whether or not two vertices are connected. Optional third
