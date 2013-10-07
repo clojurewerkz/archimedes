@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
   (:import com.tinkerpop.blueprints.Element))
 
-
 (defn get
   ([^Element elem key]
      (get elem key nil))
