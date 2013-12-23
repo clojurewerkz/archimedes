@@ -114,11 +114,11 @@
 (defn get-feature
   "Gets the value of the feature for a graph."
   [s]
-  (get ^Map (get-features) s))
+  (get ^java.util.Map (get-features) s))
 
 (defmacro transact!
-  [& forms]
   "Perform graph operations inside a transaction."
+  [& forms]
   `(~transact!* (fn [] ~@forms)))
 
 (defn- retry-transact!*
@@ -135,12 +135,12 @@
           (recur max-retries wait-time-fn (inc try-count) f))))))
 
 (defmacro retry-transact!
-  [max-retries wait-time & forms]
   "Perform graph operations inside a transaction.  The transaction will retry up
   to `max-retries` times.  `wait-time` can be an integer corresponding to the
   number of milliseconds to wait before each try, or it can be a function that
   takes the retry number (starting with 1) and returns the number of
   milliseconds to wait before that retry."
+  [max-retries wait-time & forms]
   `(let [wait-time-fn# (if (ifn? ~wait-time)
                          ~wait-time
                          (constantly ~wait-time))]
