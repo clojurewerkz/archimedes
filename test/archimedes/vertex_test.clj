@@ -79,7 +79,7 @@
     (is (= #{"B" "C"}
            (set (map #(v/get % :name) (v/find-by-kv :age 2)))))))
 
-(deftest test-find-by-kv
+(deftest test-find-by-kv-2
   (g/use-clean-graph!)
   (let [v1 (v/create-with-id! 100 {:age  1
                                    :name "A"})
