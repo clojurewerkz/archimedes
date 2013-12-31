@@ -1,12 +1,11 @@
-(defproject clojurewerkz/archimedes "1.0.0-alpha3"
+(defproject clojurewerkz/archimedes "1.0.0-alpha6-SNAPSHOT"
   :description "Clojure wrapper for Tinkerpop Blueprints"
   :url "https://github.com/clojurewerkz/archimedes"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [potemkin "0.2.0"]                 
-                 [clojurewerkz/ogre "2.3.0.1"]
-                 [com.tinkerpop.blueprints/blueprints-core "2.3.0"]]
+                 [com.tinkerpop.blueprints/blueprints-core "2.4.0"]]
   :profiles {:1.4    {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.6    {:dependencies [[org.clojure/clojure "1.6.0-master-SNAPSHOT"]]}
              :master {:dependencies [[org.clojure/clojure "1.6.0-master-SNAPSHOT"]]}}
@@ -17,5 +16,5 @@
                  "sonatype-snapshots" {:url "http://oss.sonatype.org/content/repositories/snapshots"
                                        :snapshots true
                                        :releases {:checksum :fail :update :always}}}
-;;  :warn-on-reflection true
+  ;;  :warn-on-reflection true
   )

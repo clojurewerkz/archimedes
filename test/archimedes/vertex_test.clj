@@ -7,7 +7,7 @@
 (deftest test-delete
   (g/use-clean-graph!)
   (let [u (v/create-with-id! 100 {:name "v1"})]
-    (v/delete! u)
+    (v/remove! u)
     (is (=  nil (v/find-by-id 100)))
     (is (empty? (v/find-by-kv :name "v1")))))
 
@@ -37,6 +37,20 @@
     (is (= 2 (props :b)))
     (is (= 3 (props :c)))))
 
+(deftest test-to-map-id
+  (g/use-clean-graph!)
+  (let [id :ID]
+    (try
+      (g/set-element-id-key! id)
+      (let [v1 (v/create-with-id! 100 {:name "v1" :a 1 :b 2 :c 3})
+            props (v/to-map v1)]
+        (is (= "100" (props id)))
+        (is (= 1 (props :a)))
+        (is (= 2 (props :b)))
+        (is (= 3 (props :c))))
+      (finally
+        (g/set-element-id-key! :__id__)))))
+
 (deftest test-find-by-id-single
   (g/use-clean-graph!)
   (let [v1 (v/create-with-id! 100 {:prop 1})
@@ -65,7 +79,7 @@
     (is (= #{"B" "C"}
            (set (map #(v/get % :name) (v/find-by-kv :age 2)))))))
 
-(deftest test-find-by-kv
+(deftest test-find-by-kv-2
   (g/use-clean-graph!)
   (let [v1 (v/create-with-id! 100 {:age  1
                                    :name "A"})
