@@ -45,7 +45,7 @@
   `(let [^com.tinkerpop.blueprints.Query query# (-> (start-at ~starting-point) ~@body)]
      (into [] (.edges query#))))
 
-(defmacro ^long count
-  [^Vertex starting-point & body]
+(defmacro count
+  ^long [^Vertex starting-point & body]
   `(let [^com.tinkerpop.blueprints.Query query# (-> (start-at ~starting-point) ~@body)]
      (.count query#)))
