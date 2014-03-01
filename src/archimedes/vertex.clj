@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
   (:import (com.tinkerpop.blueprints Vertex Direction Graph)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
-  (:require [archimedes.core :refer (*graph* *pre-fn*)]
+  (:require [archimedes.core :refer (*graph* *pre-fn* *element-id-key*)]
             [archimedes.util :refer (keywords-to-str-array)]
             [archimedes.conversion :refer (to-edge-direction)]
             [potemkin :as po]
@@ -30,11 +30,11 @@
   (.getVertex ^Graph *graph* vertex))
 
 ;;
-;; Deletion methods
+;; Removal methods
 ;;
 
-(defn delete!  
-  "Delete a vertex."
+(defn remove!  
+  "Remove a vertex."
   [vertex]
   (*pre-fn*)
   (.removeVertex ^Graph *graph* vertex))
@@ -49,7 +49,7 @@
   (*pre-fn*)
   (->> (keys vertex)
        (map #(vector (keyword %) (get vertex %)))
-       (into {:__id__ (id-of vertex)})))
+       (into { *element-id-key* (id-of vertex)})))
 
 ;;Finders
 (defn find-by-id

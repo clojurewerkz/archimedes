@@ -10,7 +10,7 @@
         w (v/create-with-id! 101)
         a (e/connect-with-id! 102 u :test w)
         a-id (e/id-of a)]
-    (e/delete! a)
+    (e/remove! a)
     (is (=  nil (e/find-by-id a-id)))))
 
 (deftest test-simple-property-mutation
@@ -33,6 +33,15 @@
     (is (= 2 (e/get edge :b)))
     (is (= 3 (e/get edge :c)))))
 
+(deftest test-get-all-edges
+  (g/use-clean-graph!)
+  (let [v1 (v/create-with-id! 100 {:name "v1"})
+        v2 (v/create-with-id! 101 {:name "v2"})
+        edge (e/connect-with-id! 102 v1 :test v2  {:a 0})
+        edge (e/connect-with-id! 103 v1 :test v2  {:a 1})
+        edge (e/connect-with-id! 104 v1 :test v2  {:a 2})]
+    (is (= 3 (count (e/get-all-edges))))))
+
 (deftest test-to-map
   (g/use-clean-graph!)
   (let [v1 (v/create-with-id! 100 {:name "v1"})
@@ -40,6 +49,22 @@
         edge (e/connect-with-id! 102 v1 :test v2 {:a 1 :b 2 :c 3})
         prop-map (e/to-map edge)]
     (is (= {:a 1 :b 2 :c 3} (dissoc prop-map :__id__ :__label__)))))
+
+(deftest test-to-map-id
+  (g/use-clean-graph!)
+  (let [id :ID
+        label :LABEL]    
+    (try
+      (g/set-element-id-key! id)
+      (g/set-edge-label-key! label)
+      (let [v1 (v/create-with-id! 100 {:name "v1"})
+            v2 (v/create-with-id! 101 {:name "v2"})
+            edge (e/connect-with-id! 102 v1 :test v2 {:a 1 :b 2 :c 3})
+            prop-map (e/to-map edge)]
+      (is (= {:a 1 :b 2 :c 3 id "102" label :test}  prop-map)))
+      (finally
+        (g/set-element-id-key! :__id__)
+        (g/set-edge-label-key! :__label__)))))
 
 (deftest test-endpoints
   (g/use-clean-graph!)
@@ -63,6 +88,22 @@
         edge (e/connect-with-id! 102 v1 :connexion v2)]
     (is (= v1 (e/tail-vertex edge)))))
 
+(deftest test-edges-between
+  (g/use-clean-graph!)
+  (let [v1   (v/create-with-id!  100 {:name "v1"})
+        v2   (v/create-with-id!  101 {:name "v2"})
+        v3   (v/create-with-id!  102 {:name "v3"})
+        e1   (e/connect-with-id! 103 v1 :connexion v2)
+        e2   (e/connect-with-id! 104 v1 :testing   v2)
+        e3   (e/connect-with-id! 105 v2 :connexion v1)
+        e4   (e/connect-with-id! 106 v2 :testing   v1)
+        e5   (e/connect-with-id! 107 v1 :testing   v3)
+        e5   (e/connect-with-id! 108 v2 :testing   v3)]
+    (is (= #{e1 e2} (e/edges-between v1 v2)))
+    (is (= #{e1} (e/edges-between v1 :connexion v2)))
+    (is (= nil (e/edges-between v1 :wrong v2)))
+    (is (= nil (e/edges-between v3 :wrong v1)))))
+
 (deftest test-head-vertex
   (g/use-clean-graph!)
   (let [v1   (v/create-with-id! 100 {:name "v1"})
@@ -81,6 +122,16 @@
     (is (= (e/to-map edge) (e/to-map fresh-edge)))))
 
 (deftest test-upconnect!
+  (testing "Upconnecting once without data"
+    (g/use-clean-graph!)
+    (let [v1 (v/create-with-id! 100 {:name "v1"})
+          v2 (v/create-with-id! 101 {:name "v2"})
+          edge (e/unique-upconnect-with-id! 102 v1 :connexion v2)]
+      (is (e/connected? v1 v2))
+      (is (e/connected? v1 :connexion v2))
+      (is (not (e/connected? v2 v1)))
+      (is (= 1 (count (seq (.getEdges g/*graph*)))))))
+
   (testing "Upconnecting once"
     (g/use-clean-graph!)
     (let [v1 (v/create-with-id! 100 {:name "v1"})

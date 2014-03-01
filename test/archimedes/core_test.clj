@@ -18,7 +18,9 @@
     ; Open a real graph the hard wary
     (let [graph (TinkerGraphFactory/createTinkerGraph)]
       (is (= 6 (count (seq (.getVertices graph)))) "graph has the new vertex")
-      (is (= 0 (count (seq (.getVertices g/*graph*)))) "the usual *graph* is still empty"))))
+      (is (= 0 (count (seq (.getVertices g/*graph*)))) "the usual *graph* is still empty")
+      (is (= 6 (g/with-graph graph
+                 (count (seq (.getVertices g/*graph*))))) "graph has the same vertices now."))))
 
 (deftest test-retry-transact!
   (testing "with backoff function"

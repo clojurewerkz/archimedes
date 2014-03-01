@@ -3,9 +3,9 @@
   (:import (com.tinkerpop.blueprints Vertex Edge Direction Graph)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
   (:require [archimedes.vertex :as v]
-            [archimedes.core :refer (*graph* *pre-fn*)]
+            [archimedes.core :refer (*graph* *pre-fn* *element-id-key* *edge-label-key*)]
             [archimedes.conversion :refer (to-edge-direction)]            
-            [ogre.core :as q]
+            [archimedes.query :as q]
             [potemkin :as po]
             [archimedes.element :as ele]))
 
@@ -30,11 +30,11 @@
    (.getEdge ^Graph *graph* (.getId edge)))
 
 ;;
-;; Deletion methods
+;; Removal methods
 ;;
 
-(defn delete!
-  "Delete an edge."
+(defn remove!
+  "Remove an edge."
   [^Edge edge]
   (*pre-fn*)
   (.removeEdge ^Graph *graph* edge))
@@ -55,7 +55,7 @@
   (*pre-fn*)
   (->> (keys edge)
        (map #(vector (keyword %) (get edge %)))
-       (into {:__id__ (id-of edge) :__label__ (label-of edge)})))
+       (into {*element-id-key* (id-of edge) *edge-label-key* (label-of edge)})))
 
 (defn find-by-id
   "Retrieves edges by id from the graph."
@@ -69,7 +69,7 @@
   "Returns all edges."
   []
   (*pre-fn*)
-  (set (.getVertices ^Graph *graph*)))
+  (set (.getEdges ^Graph *graph*)))
 
 (defn ^Vertex get-vertex
   "Get the vertex of the edge in a certain direction."
@@ -101,14 +101,13 @@
      (*pre-fn*)
      ;; Source for these edge queries:
      ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
-     (let [^Edge edges-set (q/query v1 
-                             (q/--E> label)
-                              q/in-vertex
-                              (q/has "id" ^Object (.getId v2))
-                              (q/back 2)
-                              (q/into-vec!))]
-       (when (not (empty? edges-set))
-         edges-set))))
+     (let [^Edge edges (q/find-edges v1 
+                                     (q/direction :out)
+                                     (q/labels label))
+           v2-id (.getId v2)
+           edge-set (set (filter #(= v2-id (.getId (.getVertex % (to-edge-direction :in)))) edges))]
+       (when (not (empty? edge-set))
+         edge-set))))
 
 (defn connected?
   "Returns whether or not two vertices are connected. Optional third
@@ -147,7 +146,7 @@
    current properties of the edge. If no such edge exists, then an
    edge is created with the given data."
   ([^Vertex v1 label ^Vertex v2]
-     (upconnect! v1 name v2 {}))
+     (upconnect! v1 label v2 {}))
   ([^Vertex v1 label ^Vertex v2 data]
      (*pre-fn*)
      (if-let [^Edge edges (edges-between v1 label v2)]
