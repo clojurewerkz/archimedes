@@ -137,3 +137,11 @@
            (v/get (first v1-a) :heritage)
            (v/get (first v1-b) :heritage)
            (v/get (first v2) :heritage)))))
+
+(deftest test-get-false-val
+  (let [graph (g/clean-tinkergraph)
+        v     (v/create-with-id! graph 100 {:foo false})]
+    (is (= (v/get v :foo) false))
+    (is (= (v/get v :foo 1) false))
+    (is (nil? (v/get v :bar)))
+    (is (= (v/get v :bar 1) 1))))
