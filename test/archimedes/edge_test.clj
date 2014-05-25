@@ -156,3 +156,13 @@
       (is (= 1 (e/get edge :a)))
       (is (= 0 (e/get edge :b)))
       (is (= 1 (count (seq (.getEdges g))))))))
+
+(deftest test-get-false-val
+  (let [graph (cr/clean-tinkergraph)
+        v1    (v/create-with-id! graph 100)
+        v2    (v/create-with-id! graph 101)
+        e     (e/connect-with-id! graph 102 v1 :connexion v2 {:foo false})]
+    (is (= (e/get e :foo) false))
+    (is (= (e/get e :foo 1) false))
+    (is (nil? (e/get e :bar)))
+    (is (= (e/get e :bar 1) 1))))

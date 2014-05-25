@@ -7,7 +7,7 @@
      (get elem key nil))
   ([^Element elem key not-found]
      (let [value (.getProperty elem (name key))]
-       (or value not-found))))
+       (if (nil? value) not-found value))))
 
 (defn keys
   [^Element elem]
