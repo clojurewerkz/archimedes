@@ -158,11 +158,11 @@
    value pair to have the new properties specifiied by the map. Always
    returns the set of vertices that were just update or created."
   [g id k m]
-  (let [vertices (find-by-kv g(name k) (k m))]
+  (let [vertices (find-by-kv g (name k) (k m))]
     (if (empty? vertices)
       (set [(create-with-id! g id m)]) 
       (do
-        (doseq [vertex vertices] (merge! g vertex m))
+        (doseq [vertex vertices] (merge! vertex m))
         vertices))))
 
 (defn unique-upsert-with-id!
