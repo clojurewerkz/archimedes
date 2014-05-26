@@ -9,11 +9,11 @@
 (def ^{:dynamic true} *edge-label-key* :__label__)
 
 
-(defn set-element-id-key! 
+(defn set-element-id-key!
   [new-id]
   (alter-var-root (var *element-id-key*) (constantly new-id)))
 
-(defn set-edge-label-key! 
+(defn set-edge-label-key!
   [new-id]
   (alter-var-root (var *edge-label-key*) (constantly new-id)))
 
@@ -28,6 +28,17 @@
   (doseq [v (seq (.getVertices g))] (.removeVertex g v))
   g))
 
+(defn get-features
+  "Get a map of features for a graph.
+  (http://tinkerpop.com/docs/javadocs/blueprints/2.1.0/com/tinkerpop/blueprints/Features.html)"
+  [g]
+  (.. g getFeatures toMap))
+
+(defn get-feature
+  "Gets the value of the feature for a graph."
+  [g s]
+  (get ^Map (get-features g) s))
+
 ;;TODO Transactions need to be much more fine grain in terms of
 ;;control. And expections as well. new-transaction will only work on a
 ;;ThreadedTransactionalGraph.
@@ -41,25 +52,48 @@
   [g]
   (.commit g))
 
-(defn shutdown 
+(defn shutdown
   "Shutdown the graph."
   [g]
   (.shutdown g))
 
-(defn rollback 
+(defn rollback
   "Stops the current transaction and rolls back any changes made."
   [g]
   (.rollback g))
 
-(defn get-features
-  "Get a map of features for a graph.
-  (http://tinkerpop.com/docs/javadocs/blueprints/2.1.0/com/tinkerpop/blueprints/Features.html)"
-  [g]
-  (.. g getFeatures toMap))
+(defn with-transaction*
+  [graph f & {:keys [threaded]}]
+  {:pre [(get-feature graph "supportsTransactions")]}
+  (let [tx (if threaded (new-transaction graph) graph)]
+    (try
+      (let [result (f tx)]
+        (commit tx)
+        result)
+      (catch Throwable t
+        (try (rollback tx) (catch Exception _))
+        (throw t)))))
 
-(defn get-feature
-  "Gets the value of the feature for a graph."
-  [g s]
-  (get ^Map (get-features g) s))
+;; This approach is copied from clojure.java.jdbc. The ^:once metadata and use of fn*
+;; is explained by Christophe Grand in this blog post:
+;; http://clj-me.cgrand.net/2013/09/11/macros-closures-and-unexpected-object-retention/
+(defmacro with-transaction
+  "Evaluates body in the context of a transaction on the specified graph, which must
+   support transactions.  The binding provides the graph for the transaction and the
+   name to which the transactional graph is bound for evaluation of the body.
 
+   (with-transaction [tx graph]
+     (vertex/create! tx)
+     ...)
 
+   If the graph supports threaded transactions, the binding may also specify that the
+   body be executed in a threaded transaction.
+
+   (with-transaction [tx graph :threaded true]
+      (vertex/create! tx)
+      ...)"
+  [binding & body]
+  `(with-transaction*
+     ~(second binding)
+     (^{:once true} fn* [~(first binding)] ~@body)
+     ~@(rest (rest binding))))

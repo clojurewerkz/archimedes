@@ -6,7 +6,9 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [potemkin "0.2.0"]
                  [com.tinkerpop.blueprints/blueprints-core "2.5.0"]]
-  :profiles {:1.4    {:dependencies [[org.clojure/clojure "1.4.0"]]}
+  :profiles {:dev    {:dependencies [[com.thinkaurelius.titan/titan-core  "0.4.4"]
+                                     [com.thinkaurelius.titan/titan-berkeleyje "0.4.4"]]}
+             :1.4    {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.6    {:dependencies [[org.clojure/clojure "1.6.0"]]}
              :master {:dependencies [[org.clojure/clojure "1.7.0-master-SNAPSHOT"]]}}
   :aliases {"all" ["with-profile" "dev:dev,1.4:dev,1.6"]}
