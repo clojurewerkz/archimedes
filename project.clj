@@ -4,8 +4,8 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [potemkin "0.2.0"]                 
-                 [com.tinkerpop.blueprints/blueprints-core "2.4.0"]]
+                 [potemkin "0.2.0"]
+                 [com.tinkerpop.blueprints/blueprints-core "2.5.0"]]
   :profiles {:1.4    {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.6    {:dependencies [[org.clojure/clojure "1.6.0-master-SNAPSHOT"]]}
              :master {:dependencies [[org.clojure/clojure "1.6.0-master-SNAPSHOT"]]}}
