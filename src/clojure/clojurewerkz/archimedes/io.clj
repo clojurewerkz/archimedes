@@ -1,6 +1,6 @@
-(ns archimedes.io
+(ns clojurewerkz.archimedes.io
   (:require [clojure.java.io :as io]
-            [archimedes.core :as c])
+            [clojurewerkz.archimedes.graph :as g])
   (:import [com.tinkerpop.blueprints.util.io.graphml GraphMLWriter GraphMLReader]
            [com.tinkerpop.blueprints.util.io.gml GMLWriter GMLReader]
            [com.tinkerpop.blueprints.util.io.graphson GraphSONWriter GraphSONReader GraphSONMode]))
@@ -12,7 +12,7 @@
 
 (defn- write-graph-with-writer
   [writer g string-or-file]
-  (if (not (c/get-feature g "supportsVertexIteration"))
+  (if (not (g/get-feature g "supportsVertexIteration"))
     (throw (Exception. "Cannot write a graph that does not support vertex iteration.")))
   (let [out-stream (io/output-stream string-or-file)]
     (writer g out-stream)))

@@ -1,8 +1,8 @@
-(ns archimedes.vertex-test
+(ns clojurewerkz.archimedes.vertex-test
   (:use [clojure.test])
-  (:require [archimedes.core :as g]
-            [archimedes.vertex :as v]
-            [archimedes.edge :as e]))
+  (:require [clojurewerkz.archimedes.graph :as g]
+            [clojurewerkz.archimedes.vertex :as v]
+            [clojurewerkz.archimedes.edge :as e]))
 
 (deftest test-delete
   (let [graph (g/clean-tinkergraph)
@@ -94,27 +94,27 @@
     (is (= (set (v/incoming-edges-of v1)) #{e2}))
     (is (= (set (v/connected-vertices-of v1 :in)) #{v2}))
     (is (= (set (v/connected-in-vertices v1)) #{v2}))
-    
+
     (is (= (set (v/edges-of v1 :out)) #{e1 e3}))
     (is (= (set (v/outgoing-edges-of v1)) #{e1 e3}))
-    (is (= (set (v/connected-vertices-of v1 :out)) #{v2 v3}))    
+    (is (= (set (v/connected-vertices-of v1 :out)) #{v2 v3}))
     (is (= (set (v/connected-out-vertices v1)) #{v2 v3}))
-    
+
     (is (= (set (v/edges-of v1 :both)) #{e1 e2 e3}))
     (is (= (set (v/all-edges-of v1)) #{e1 e2 e3}))
     (is (= (set (v/connected-vertices-of v1 :both)) #{v2 v3}))
-    (is (= (set (v/all-connected-vertices v1)) #{v2 v3}))    
-    
+    (is (= (set (v/all-connected-vertices v1)) #{v2 v3}))
+
     (is (= (set (v/edges-of v1 :both :a)) #{e1}))
     (is (= (set (v/all-edges-of v1 :a)) #{e1}))
     (is (= (set (v/connected-vertices-of v1 :both :a)) #{v2}))
     (is (= (set (v/all-connected-vertices v1 :a)) #{v2}))
-    
+
     (is (= (set (v/edges-of v1 :both :a :b)) #{e1 e2}))
     (is (= (set (v/all-edges-of v1 :a :b)) #{e1 e2}))
     (is (= (set (v/connected-vertices-of v1 :both :a :b)) #{v2}))
     (is (= (set (v/all-connected-vertices v1 :a :b)) #{v2}))
-    
+
     (is (= (set (v/edges-of v1 :both :a :b :d)) #{e1 e2}))
     (is (= (set (v/all-edges-of v1 :a :b :d)) #{e1 e2}))
     (is (= (set (v/connected-vertices-of v1 :both :a :b :d )) #{v2}))

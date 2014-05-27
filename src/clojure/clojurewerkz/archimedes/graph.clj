@@ -1,4 +1,4 @@
-(ns archimedes.core
+(ns clojurewerkz.archimedes.graph
   (:import (com.tinkerpop.blueprints Element Graph TransactionalGraph
                                      ThreadedTransactionalGraph
                                      TransactionalGraph$Conclusion)

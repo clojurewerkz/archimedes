@@ -1,4 +1,4 @@
-(ns archimedes.util
+(ns clojurewerkz.archimedes.util
   (:require [clojure.reflect :as r])
   (:use [clojure.pprint :only (pprint)]))
 

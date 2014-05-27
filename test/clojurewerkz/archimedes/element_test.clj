@@ -1,8 +1,8 @@
-(ns archimedes.element-test
+(ns clojurewerkz.archimedes.element-test
   (:use [clojure.test])
-  (:require [archimedes.core :refer (clean-tinkergraph)]
-            [archimedes.vertex :as v]
-            [archimedes.edge :as e]))
+  (:require [clojurewerkz.archimedes.graph :refer (clean-tinkergraph)]
+            [clojurewerkz.archimedes.vertex :as v]
+            [clojurewerkz.archimedes.edge :as e]))
 
 (deftest test-get-keys
   (let [g (clean-tinkergraph)
@@ -53,7 +53,7 @@
     (v/update! a :a + 9)
     (v/update! a :b (constantly 10))
     (e/update! c :a + 9)
-    (e/update! c :b (constantly 10))    
+    (e/update! c :b (constantly 10))
     (is (= 10 (v/get a :a)))
     (is (= 10 (v/get c :a)))
     (is (= 10 (v/get a :b)))

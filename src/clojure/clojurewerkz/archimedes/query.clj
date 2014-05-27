@@ -1,6 +1,6 @@
-(ns archimedes.query
+(ns clojurewerkz.archimedes.query
   (:refer-clojure :exclude [count])
-  (:require [archimedes.conversion :refer (convert-symbol-to-compare to-edge-direction)])
+  (:require [clojurewerkz.archimedes.conversion :refer (convert-symbol-to-compare to-edge-direction)])
   (:import  [com.tinkerpop.blueprints Vertex Edge Direction Query]))
 
 ;;

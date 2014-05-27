@@ -1,12 +1,12 @@
-(ns archimedes.vertex
+(ns clojurewerkz.archimedes.vertex
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
   (:import (com.tinkerpop.blueprints Vertex Direction Graph)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
-  (:require [archimedes.core :refer (*element-id-key*)]
-            [archimedes.util :refer (keywords-to-str-array)]
-            [archimedes.conversion :refer (to-edge-direction)]
-            [potemkin :as po]
-            [archimedes.element :as ele]))
+  (:require [clojurewerkz.archimedes.graph :refer (*element-id-key*)]
+            [clojurewerkz.archimedes.util :refer (keywords-to-str-array)]
+            [clojurewerkz.archimedes.conversion :refer (to-edge-direction)]
+            [clojurewerkz.archimedes.element :as ele]
+            [potemkin :as po]))
 
 (po/import-fn ele/get)
 (po/import-fn ele/keys)
@@ -32,7 +32,7 @@
 ;; Removal methods
 ;;
 
-(defn remove!  
+(defn remove!
   "Remove a vertex from the given graph."
   [g vertex]
   (.removeVertex ^Graph g vertex))
@@ -98,12 +98,12 @@
   (.getVertices v Direction/OUT (keywords-to-str-array labels)))
 
 (defn connected-in-vertices
-  "Returns vertices connected to this vertex by an inbound edge with the given labels"  
+  "Returns vertices connected to this vertex by an inbound edge with the given labels"
   [^Vertex v & labels]
   (.getVertices v Direction/IN (keywords-to-str-array labels)))
 
 (defn all-connected-vertices
-  "Returns vertices connected to this vertex with the given labels"  
+  "Returns vertices connected to this vertex with the given labels"
   [^Vertex v & labels]
   (.getVertices v Direction/BOTH (keywords-to-str-array labels)))
 
@@ -111,7 +111,7 @@
 ;; Creation methods
 ;;
 
-(defn create!  
+(defn create!
   "Create a vertex, optionally with the given property map."
   ([g]
      (create! g {}))
@@ -119,7 +119,7 @@
      (let [^Vertex new-vertex (.addVertex g nil)]
        (merge! new-vertex m))))
 
-(defn create-with-id!  
+(defn create-with-id!
   "Create a vertex, optionally with the given property map."
   ([g id]
      (create-with-id! g id {}))
@@ -135,7 +135,7 @@
   [g k m]
   (let [vertices (find-by-kv g (name k) (k m))]
     (if (empty? vertices)
-      (set [(create! g m)]) 
+      (set [(create! g m)])
       (do
         (doseq [vertex vertices] (merge! g vertex m))
         vertices))))
@@ -160,7 +160,7 @@
   [g id k m]
   (let [vertices (find-by-kv g (name k) (k m))]
     (if (empty? vertices)
-      (set [(create-with-id! g id m)]) 
+      (set [(create-with-id! g id m)])
       (do
         (doseq [vertex vertices] (merge! vertex m))
         vertices))))

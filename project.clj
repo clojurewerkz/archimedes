@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [potemkin "0.2.0"]
                  [com.tinkerpop.blueprints/blueprints-core "2.5.0"]]
+  :source-paths ["src/clojure"]
   :profiles {:dev    {:dependencies [[com.thinkaurelius.titan/titan-core  "0.4.4"]
                                      [com.thinkaurelius.titan/titan-berkeleyje "0.4.4"]]}
              :1.4    {:dependencies [[org.clojure/clojure "1.4.0"]]}

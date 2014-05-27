@@ -1,4 +1,4 @@
-(ns archimedes.element
+(ns clojurewerkz.archimedes.element
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
   (:import com.tinkerpop.blueprints.Element))
 
@@ -22,7 +22,7 @@
   (.getId elem))
 
 (defn assoc!
-  [^Element elem & kvs]  
+  [^Element elem & kvs]
   ;;Avoids changing keys that shouldn't be changed.
   ;;Important when using types. You aren't ever going to change a
   ;;user's id for example.

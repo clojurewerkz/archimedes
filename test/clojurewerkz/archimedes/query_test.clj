@@ -1,8 +1,8 @@
-(ns archimedes.query-test
-  (:require [archimedes.core   :as g]
-            [archimedes.vertex :as v]
-            [archimedes.edge   :as e]
-            [archimedes.query  :as q])
+(ns clojurewerkz.archimedes.query-test
+  (:require [clojurewerkz.archimedes.graph  :as g]
+            [clojurewerkz.archimedes.vertex :as v]
+            [clojurewerkz.archimedes.edge   :as e]
+            [clojurewerkz.archimedes.query  :as q])
   (:use clojure.test))
 
 
@@ -10,12 +10,12 @@
   (let [graph (g/clean-tinkergraph)
         a     (v/create-with-id!  graph 100 {:name "Steven" :age 30})
         b     (v/create-with-id!  graph 101 {:name "Alonso" :age 32})
-        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})        
+        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})
         _     (e/connect-with-id! graph 103 a :friend b)
-        _     (e/connect-with-id! graph 104 a :friend c)        
+        _     (e/connect-with-id! graph 104 a :friend c)
         vs    (q/find-vertices a
                  (q/direction :out)
-                 (q/labels :friend))]    
+                 (q/labels :friend))]
     (is (= 2 (count vs)))
     (is (= #{b c} (set vs)))))
 
@@ -23,21 +23,21 @@
   (let [graph (g/clean-tinkergraph)
         a     (v/create-with-id!  graph 100 {:name "Steven" :age 30})
         b     (v/create-with-id!  graph 101 {:name "Alonso" :age 32})
-        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})        
+        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})
         _     (e/connect-with-id! graph 103 a :friend b)
         _     (e/connect-with-id! graph 104 a :friend c)
         _     (e/connect-with-id! graph 105 a :remembers c)
-        _     (e/connect-with-id! graph 106 c :remembers a)                
+        _     (e/connect-with-id! graph 106 c :remembers a)
         n     (q/count a
                  (q/direction :out)
-                 (q/labels :friend :remembers))]    
+                 (q/labels :friend :remembers))]
     (is (= 3 n))))
 
 (deftest test-edge-count-with-default-comparator
   (let [graph (g/clean-tinkergraph)
         a     (v/create-with-id!  graph 100 {:name "Steven" :age 30})
         b     (v/create-with-id!  graph 101 {:name "Alonso" :age 32})
-        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})        
+        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})
         _     (e/connect-with-id! graph 103 a :friend b {:age 28})
         _     (e/connect-with-id! graph 104 a :friend c {:age 30})
         n1    (q/count a
@@ -60,7 +60,7 @@
   (let [graph (g/clean-tinkergraph)
         a     (v/create-with-id!  graph 100 {:name "Steven" :age 30})
         b     (v/create-with-id!  graph 101 {:name "Alonso" :age 32})
-        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})        
+        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})
         _     (e/connect-with-id! graph 103 a :friend b {:age 28})
         _     (e/connect-with-id! graph 104 a :friend c {:age 30})
         n1    (q/count a
@@ -83,7 +83,7 @@
   (let [graph (g/clean-tinkergraph)
         a     (v/create-with-id!  graph 100 {:name "Steven" :age 30})
         b     (v/create-with-id!  graph 101 {:name "Alonso" :age 32})
-        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})        
+        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})
         _     (e/connect-with-id! graph 103 a :friend b {:age 28})
         _     (e/connect-with-id! graph 104 a :friend c {:age 30})
         n1    (q/count a

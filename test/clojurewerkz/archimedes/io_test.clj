@@ -1,9 +1,9 @@
-(ns archimedes.io-test
+(ns clojurewerkz.archimedes.io-test
   (:use clojure.test)
-  (:require [archimedes.core :as g]
-            [archimedes.io :as io]
-            [archimedes.vertex :as v]
-            [archimedes.edge :as e]
+  (:require [clojurewerkz.archimedes.graph :as g]
+            [clojurewerkz.archimedes.io :as io]
+            [clojurewerkz.archimedes.vertex :as v]
+            [clojurewerkz.archimedes.edge :as e]
             [clojure.java.io :as clj-io])
   (:import [java.io File]))
 
@@ -75,12 +75,12 @@
       (io/write-graph-graphson graph tmp-typed true)
       (io/write-graph-graphson graph tmp-untyped false)
       (testing "Loading a graphson with type infomation"
-        (let [graph2 (g/clean-tinkergraph)]          
-          (io/load-graph-graphson graph2 tmp-typed)        
+        (let [graph2 (g/clean-tinkergraph)]
+          (io/load-graph-graphson graph2 tmp-typed)
           (has-n-vertices graph2 2)
           (has-n-edges graph2 1)))
       (testing "Loading a graphson without type infomation"
-        (let [graph2 (g/clean-tinkergraph)]          
-          (io/load-graph-graphson graph2 tmp-untyped)        
+        (let [graph2 (g/clean-tinkergraph)]
+          (io/load-graph-graphson graph2 tmp-untyped)
           (has-n-vertices graph2 2)
           (has-n-edges graph2 1))))))

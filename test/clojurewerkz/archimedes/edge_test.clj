@@ -1,11 +1,11 @@
-(ns archimedes.edge-test
+(ns clojurewerkz.archimedes.edge-test
   (:use [clojure.test])
-  (:require [archimedes.core :as cr]
-            [archimedes.edge :as e]
-            [archimedes.vertex :as v]))
+  (:require [clojurewerkz.archimedes.graph :as gr]
+            [clojurewerkz.archimedes.edge :as e]
+            [clojurewerkz.archimedes.vertex :as v]))
 
 (deftest test-delete
-  (let [g (cr/clean-tinkergraph)
+  (let [g (gr/clean-tinkergraph)
         u (v/create-with-id!  g 100)
         w (v/create-with-id!  g 101)
         a (e/connect-with-id! g 102 u :test w)
@@ -14,7 +14,7 @@
     (is (=  nil (e/find-by-id a-id)))))
 
 (deftest test-simple-property-mutation
-  (let [g  (cr/clean-tinkergraph)
+  (let [g  (gr/clean-tinkergraph)
         v1 (v/create-with-id! g 100 {:name "v1"})
         v2 (v/create-with-id! g 101 {:name "v2"})
         edge (e/connect-with-id! g 102 v1 :test v2 {:a 1})]
@@ -24,7 +24,7 @@
     (is (= nil (e/get edge :a)))))
 
 (deftest test-multiple-property-mutation
-  (let [g  (cr/clean-tinkergraph)
+  (let [g  (gr/clean-tinkergraph)
         v1 (v/create-with-id! g 100 {:name "v1"})
         v2 (v/create-with-id! g 101 {:name "v2"})
         edge (e/connect-with-id! g 102 v1 :test v2  {:a 0})]
@@ -34,7 +34,7 @@
     (is (= 3 (e/get edge :c)))))
 
 (deftest test-get-all-edges
-  (let [g (cr/clean-tinkergraph)
+  (let [g (gr/clean-tinkergraph)
         v1 (v/create-with-id! g 100 {:name "v1"})
         v2 (v/create-with-id! g 101 {:name "v2"})
         edge (e/connect-with-id! g 102 v1 :test v2  {:a 0})
@@ -43,7 +43,7 @@
     (is (= 3 (count (e/get-all-edges g))))))
 
 (deftest test-to-map
-  (let [g (cr/clean-tinkergraph)
+  (let [g (gr/clean-tinkergraph)
         v1 (v/create-with-id! g 100 {:name "v1"})
         v2 (v/create-with-id! g 101 {:name "v2"})
         edge (e/connect-with-id! g 102 v1 :test v2 {:a 1 :b 2 :c 3})
@@ -51,29 +51,29 @@
     (is (= {:a 1 :b 2 :c 3} (dissoc prop-map :__id__ :__label__)))))
 
 (deftest test-to-map-id
-  (let [id :ID label :LABEL]    
+  (let [id :ID label :LABEL]
     (try
-      (cr/set-element-id-key! id)
-      (cr/set-edge-label-key! label)
-      (let [g (cr/clean-tinkergraph)
+      (gr/set-element-id-key! id)
+      (gr/set-edge-label-key! label)
+      (let [g (gr/clean-tinkergraph)
             v1 (v/create-with-id! g 100 {:name "v1"})
             v2 (v/create-with-id! g 101 {:name "v2"})
             edge (e/connect-with-id! g 102 v1 :test v2 {:a 1 :b 2 :c 3})
             prop-map (e/to-map edge)]
       (is (= {:a 1 :b 2 :c 3 id "102" label :test}  prop-map)))
       (finally
-        (cr/set-element-id-key! :__id__)
-        (cr/set-edge-label-key! :__label__)))))
+        (gr/set-element-id-key! :__id__)
+        (gr/set-edge-label-key! :__label__)))))
 
 (deftest test-endpoints
-  (let [g (cr/clean-tinkergraph)
+  (let [g (gr/clean-tinkergraph)
         v1   (v/create-with-id! g 100 {:name "v1"})
         v2   (v/create-with-id! g 101 {:name "v2"})
         edge (e/connect-with-id! g 102 v1 :connexion v2)]
     (is (= ["v1" "v2"] (map #(e/get % :name) (e/endpoints edge))))))
 
 (deftest test-get-vertex
-  (let [g    (cr/clean-tinkergraph)
+  (let [g    (gr/clean-tinkergraph)
         v1   (v/create-with-id! g 100 {:name "v1"})
         v2   (v/create-with-id! g 101 {:name "v2"})
         edge (e/connect-with-id! g 102 v1 :connexion v2)]
@@ -81,14 +81,14 @@
     (is (= v2 (e/get-vertex edge :in)))))
 
 (deftest test-tail-vertex
-  (let [g    (cr/clean-tinkergraph)
+  (let [g    (gr/clean-tinkergraph)
         v1   (v/create-with-id! g 100 {:name "v1"})
         v2   (v/create-with-id! g 101 {:name "v2"})
         edge (e/connect-with-id! g 102 v1 :connexion v2)]
     (is (= v1 (e/tail-vertex edge)))))
 
 (deftest test-edges-between
-  (let [g    (cr/clean-tinkergraph)
+  (let [g    (gr/clean-tinkergraph)
         v1   (v/create-with-id!  g 100 {:name "v1"})
         v2   (v/create-with-id!  g 101 {:name "v2"})
         v3   (v/create-with-id!  g 102 {:name "v3"})
@@ -104,14 +104,14 @@
     (is (= nil (e/edges-between v3 :wrong v1)))))
 
 (deftest test-head-vertex
-  (let [g    (cr/clean-tinkergraph)
+  (let [g    (gr/clean-tinkergraph)
         v1   (v/create-with-id! g 100 {:name "v1"})
         v2   (v/create-with-id! g 101 {:name "v2"})
         edge (e/connect-with-id! g 102 v1 :connexion v2)]
     (is (= v2 (e/head-vertex edge)))))
 
 (deftest test-refresh
-  (let [g    (cr/clean-tinkergraph)
+  (let [g    (gr/clean-tinkergraph)
         v1 (v/create-with-id! g 100 {:name "v1"})
         v2 (v/create-with-id! g 101 {:name "v2"})
         edge (e/connect-with-id! g 102 v1 :connexion v2 )
@@ -122,7 +122,7 @@
 
 (deftest test-upconnect!
   (testing "Upconnecting once without data"
-    (let [g    (cr/clean-tinkergraph)
+    (let [g    (gr/clean-tinkergraph)
           v1 (v/create-with-id! g 100 {:name "v1"})
           v2 (v/create-with-id! g 101 {:name "v2"})
           edge (e/unique-upconnect-with-id! g 102 v1 :connexion v2)]
@@ -131,7 +131,7 @@
       (is (not (e/connected? v2 v1)))
       (is (= 1 (count (seq (.getEdges g)))))))
   (testing "Upconnecting once"
-    (let [g    (cr/clean-tinkergraph)
+    (let [g    (gr/clean-tinkergraph)
           v1 (v/create-with-id! g 100 {:name "v1"})
           v2 (v/create-with-id! g 101 {:name "v2"})
           edge (e/unique-upconnect-with-id! g 102 v1 :connexion v2
@@ -143,7 +143,7 @@
       (is (= 1 (count (seq (.getEdges g)))))))
 
   (testing "Upconnecting multiple times"
-    (let [g  (cr/clean-tinkergraph)
+    (let [g  (gr/clean-tinkergraph)
           v1 (v/create-with-id! g 100 {:name "v1"})
           v2 (v/create-with-id! g 101 {:name "v2"})
           edge (e/unique-upconnect-with-id! g 102 v1 :connexion v2 {:name "the edge"})
@@ -158,7 +158,7 @@
       (is (= 1 (count (seq (.getEdges g))))))))
 
 (deftest test-get-false-val
-  (let [graph (cr/clean-tinkergraph)
+  (let [graph (gr/clean-tinkergraph)
         v1    (v/create-with-id! graph 100)
         v2    (v/create-with-id! graph 101)
         e     (e/connect-with-id! graph 102 v1 :connexion v2 {:foo false})]

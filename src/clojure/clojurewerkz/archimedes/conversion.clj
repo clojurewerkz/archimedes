@@ -1,7 +1,5 @@
-(ns archimedes.conversion
-  (:refer-clojure :exclude [keys vals assoc! dissoc! get find])
+(ns clojurewerkz.archimedes.conversion
   (:import [com.tinkerpop.blueprints Direction Query$Compare]))
-
 
 (defprotocol EdgeDirectionConversion
   (to-edge-direction [input] "Converts input to a Blueprints edge direction"))

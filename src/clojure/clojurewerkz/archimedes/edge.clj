@@ -1,13 +1,13 @@
-(ns archimedes.edge
+(ns clojurewerkz.archimedes.edge
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
   (:import (com.tinkerpop.blueprints Vertex Edge Direction Graph)
            (com.tinkerpop.blueprints.impls.tg TinkerGraph))
-  (:require [archimedes.vertex :as v]
-            [archimedes.core :refer (*element-id-key* *edge-label-key*)]
-            [archimedes.conversion :refer (to-edge-direction)]            
-            [archimedes.query :as q]
-            [potemkin :as po]
-            [archimedes.element :as ele]))
+  (:require [clojurewerkz.archimedes.vertex :as v]
+            [clojurewerkz.archimedes.graph :refer (*element-id-key* *edge-label-key*)]
+            [clojurewerkz.archimedes.conversion :refer (to-edge-direction)]
+            [clojurewerkz.archimedes.query :as q]
+            [clojurewerkz.archimedes.element :as ele]
+            [potemkin :as po]))
 
 (po/import-fn ele/get)
 (po/import-fn ele/keys)
@@ -76,7 +76,7 @@
   (.getVertex e Direction/IN))
 
 (defn ^Vertex tail-vertex
-  "Get the tail vertex of the edge."  
+  "Get the tail vertex of the edge."
   [^Edge e]
   (.getVertex e Direction/OUT))
 
@@ -93,7 +93,7 @@
   ([^Vertex v1 label ^Vertex v2]
      ;; Source for these edge queries:
      ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
-     (let [^Edge edges (q/find-edges v1 
+     (let [^Edge edges (q/find-edges v1
                                      (q/direction :out)
                                      (q/labels label))
            v2-id (.getId v2)
@@ -105,7 +105,7 @@
   "Returns whether or not two vertices are connected. Optional third
    arguement specifying the label of the edge."
   ([^Vertex v1 ^Vertex v2]
-     (connected? v1 nil v2))  
+     (connected? v1 nil v2))
   ([^Vertex v1 label ^Vertex v2]
      (not (empty? (edges-between v1 label v2)))))
 
