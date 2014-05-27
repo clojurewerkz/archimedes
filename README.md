@@ -2,7 +2,9 @@
 
 Archimedes is a Clojure library for working with graphs that conform to the [Tinkerpop Blueprints](http://tinkerpop.com) interface.
 
-# Disclaimer: Titanium development is currently on hiatus. There are major breaking changes that need to be made to this library and the documentation and the primary developer ([zmaril](http://github.com/zmaril)) is too busy finishing college to make them. If you are interested in making the changes, please get in touch, otherwise beware!
+# Disclaimer: Archimedes and Titanium are currently being actively reworked with breaking API changes.
+
+See the blog post [Major Breaking Public API Changes Coming in Our Projects](http://blog.clojurewerkz.org/blog/2014/04/26/major-breaking-public-api-changes-coming-in-our-projects/) for a summary.
 
 ## Project Goals
 
@@ -13,8 +15,8 @@ Archimedes is a Clojure library for working with graphs that conform to the [Tin
 
 ## Community
 
-[Archimedes has a mailing list](https://groups.google.com/forum/?fromgroups#!forum/gremlin-users)
-Feel free to join it and ask any questions you may have. If you have
+Discussion about Archimedes takes place on the [Titanium mailing list](https://groups.google.com/forum/#!forum/clojure-titanium)
+Feel free to join in and ask any questions you may have. If you have
 any questions about Archimedes, ask
 [Zack on twitter](https://twitter.com/ZackMaril) or pop into
 `#clojurewerkz` on irc. 
