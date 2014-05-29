@@ -4,6 +4,11 @@
             [clojurewerkz.archimedes.vertex :as v]
             [clojurewerkz.archimedes.edge :as e]))
 
+(deftest test-create
+  (let [graph (g/clean-tinkergraph)
+        u (v/create! graph)]
+    (is (= 1 (count (v/get-all-vertices graph))))))
+
 (deftest test-delete
   (let [graph (g/clean-tinkergraph)
         u (v/create-with-id! graph 100 {:name "v1"})]

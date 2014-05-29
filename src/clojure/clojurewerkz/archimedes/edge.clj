@@ -118,7 +118,7 @@
   ([g ^Vertex v1 label ^Vertex v2]
      (connect! g v1 label v2 {}))
   ([g ^Vertex v1 label ^Vertex v2 data]
-     (let [new-edge (.addEdge g v2 ^String (name label))]
+     (let [new-edge (.addEdge g nil v1 v2 ^String (name label))]
        (merge! new-edge data))))
 
 (defn connect-with-id!

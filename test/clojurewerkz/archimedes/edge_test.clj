@@ -13,6 +13,14 @@
     (e/remove! g a)
     (is (=  nil (e/find-by-id a-id)))))
 
+(deftest test-connect
+  (let [g (gr/clean-tinkergraph)
+        u (v/create! g)
+        v (v/create! g)
+        e (e/connect! g u :test v)]
+    (is (e/connected? u v))
+    (is (e/connected? u :test v))))
+
 (deftest test-simple-property-mutation
   (let [g  (gr/clean-tinkergraph)
         v1 (v/create-with-id! g 100 {:name "v1"})
