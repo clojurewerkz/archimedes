@@ -63,12 +63,14 @@
   (.rollback g))
 
 (defn with-transaction*
-  [graph f & {:keys [threaded]}]
+  [graph f & {:keys [threaded? rollback?]}]
   {:pre [(get-feature graph "supportsTransactions")]}
-  (let [tx (if threaded (new-transaction graph) graph)]
+  (let [tx (if threaded? (new-transaction graph) graph)]
     (try
       (let [result (f tx)]
-        (commit tx)
+        (if rollback?
+          (rollback tx)
+          (commit tx))
         result)
       (catch Throwable t
         (try (rollback tx) (catch Exception _))
@@ -89,7 +91,15 @@
    If the graph supports threaded transactions, the binding may also specify that the
    body be executed in a threaded transaction.
 
-   (with-transaction [tx graph :threaded true]
+   (with-transaction [tx graph :threaded? true]
+      (vertex/create! tx)
+      ...)
+
+   Note that `commit` and `rollback` should not be called explicitly inside
+   `with-transaction`. If you want to force a rollback, you must throw an
+   exception or specify rollback in the `with-transaction` call:
+
+   (with-transaction [tx graph :rollback? true]
       (vertex/create! tx)
       ...)"
   [binding & body]

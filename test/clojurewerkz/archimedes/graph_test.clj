@@ -1,7 +1,8 @@
 (ns clojurewerkz.archimedes.graph-test
   (:use clojure.test)
   (:require [clojurewerkz.archimedes.graph :as g]
-            [clojurewerkz.archimedes.vertex :as v])
+            [clojurewerkz.archimedes.vertex :as v]
+            [me.raynes.fs :as fs])
   (:import  [com.tinkerpop.blueprints.impls.tg TinkerGraphFactory TinkerGraph]
             [com.thinkaurelius.titan.core TitanFactory TitanGraph]
             [java.io File]))
@@ -16,25 +17,9 @@
     (is (thrown? java.lang.AssertionError
                  (g/with-transaction [g (g/clean-tinkergraph)] nil)))))
 
-(let [filename-chars (vec "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")]
-  (defn- random-filename
-    []
-    (apply str (repeatedly 10 #(rand-nth filename-chars)))))
-
-(defn- create-temp-dir
-  []
-  (let [tmpdir (System/getProperty "java.io.tmpdir")]
-    (loop [remaining-attempts 10]
-      (if (> remaining-attempts 0)
-        (let [dir (File. tmpdir (random-filename))]
-          (if (.mkdir dir)
-            dir
-            (recur (dec remaining-attempts))))
-        (throw (Exception. "Failed to create temporary directory after 10 attempts"))))))
-
 (defn- new-temp-titan-db
   []
-  (let [dir (create-temp-dir)]
+  (let [dir (fs/temp-dir "testdb")]
     (TitanFactory/open (.getPath dir))))
 
 (deftest test-transaction-rollback-on-exception
@@ -49,16 +34,32 @@
           (is (= (.getMessage e) "Died"))))
       (is (empty? (v/get-all-vertices graph))))))
 
+(deftest test-transaction-explicit-rollback
+  (testing "Setting :rollback? option reverts added vertex"
+    (let [graph (new-temp-titan-db)]
+      (g/with-transaction [tx graph :rollback? true]
+        (v/create! tx {:name "Mallory"})
+        (is (= (count (v/get-all-vertices tx)) 1)))
+      (is (empty? (v/get-all-vertices graph))))))
+
 (deftest test-threaded-transaction-rollback-on-exception
   (testing "Uncaught exception reverts added vertex"
     (let [graph (new-temp-titan-db)]
       (try
-        (g/with-transaction [tx graph :threaded true]
+        (g/with-transaction [tx graph :threaded? true]
           (v/create! tx {:name "Mallory"})
           (is (= (count (v/get-all-vertices tx)) 1))
           (throw (Exception. "Died")))
         (catch Exception e
           (is (= (.getMessage e) "Died"))))
+      (is (empty? (v/get-all-vertices graph))))))
+
+(deftest test-threaded-transaction-explicit-rollback
+  (testing "Setting :rollback? option reverts added vertex (threaded=true)"
+    (let [graph (new-temp-titan-db)]
+      (g/with-transaction [tx graph :threaded? true :rollback? true]
+        (v/create! tx {:name "Mallory"})
+        (is (= (count (v/get-all-vertices tx)) 1)))
       (is (empty? (v/get-all-vertices graph))))))
 
 (deftest test-transaction-commit
@@ -71,6 +72,6 @@
 (deftest test-threaded-transaction-commit
   (testing "Commit edit to graph (threaded=true)"
     (let [graph (new-temp-titan-db)]
-      (g/with-transaction [tx graph :threaded true]
+      (g/with-transaction [tx graph :threaded? true]
         (v/create! tx [:name "Bob"]))
       (is (= (count (v/get-all-vertices graph)) 1)))))
