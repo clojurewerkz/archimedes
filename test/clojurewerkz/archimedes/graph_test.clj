@@ -62,6 +62,18 @@
         (is (= (count (v/get-all-vertices tx)) 1)))
       (is (empty? (v/get-all-vertices graph))))))
 
+(def num-attempts (atom 0))
+
+(deftest test-transaction-retry
+  (testing "Retry transaction"
+    (let [graph (new-temp-titan-db)]
+      (is (thrown-with-msg? java.lang.Exception #"Died"
+                   (g/with-transaction-retry [tx graph :max-attempts 3 :wait-time 100]
+                     (v/create! tx {:name "Mallory"})
+                     (swap! num-attempts inc)
+                     (throw (Exception. "Died")))))
+      (is (= @num-attempts 3)))))
+
 (deftest test-transaction-commit
   (testing "Commit edit to graph"
     (let [graph (new-temp-titan-db)]

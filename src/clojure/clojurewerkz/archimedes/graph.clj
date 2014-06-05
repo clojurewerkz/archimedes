@@ -107,3 +107,31 @@
      ~(second binding)
      (^{:once true} fn* [~(first binding)] ~@body)
      ~@(rest (rest binding))))
+
+;; When we move to Blueprints 2.5, this can be reimplemented using TransactionRetryHelper
+
+(defn with-transaction-retry*
+  [graph f & {:keys [max-attempts wait-time threaded? rollback?]}]
+  {:pre [(integer? max-attempts) (or (integer? wait-time) (ifn? wait-time))]}
+  (let [wait-fn (if (integer? wait-time) (constantly wait-time) wait-time)
+        retry (fn [attempt]
+                (let [res (try
+                            (with-transaction [tx graph :threaded? threaded? :rollback? rollback?]
+                              (f tx))
+                            (catch Throwable t
+                              (if (< attempt max-attempts)
+                                ::retry
+                                (throw t))))]
+                  (if (= res ::retry)
+                    (let [wait-time (wait-fn)]
+                      (Thread/sleep wait-time)
+                      (recur (inc attempt)))
+                    res)))]
+    (retry 1)))
+
+(defmacro with-transaction-retry
+  [binding & body]
+  `(with-transaction-retry*
+     ~(second binding)
+     (^{:once true} fn* [~(first binding)] ~@body)
+     ~@(rest (rest binding))))
