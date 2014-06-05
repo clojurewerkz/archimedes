@@ -123,8 +123,8 @@
                                 ::retry
                                 (throw t))))]
                   (if (= res ::retry)
-                    (let [wait-time (wait-fn)]
-                      (Thread/sleep wait-time)
+                    (let [ms (wait-fn attempt)]
+                      (Thread/sleep ms)
                       (recur (inc attempt)))
                     res)))]
     (retry 1)))
