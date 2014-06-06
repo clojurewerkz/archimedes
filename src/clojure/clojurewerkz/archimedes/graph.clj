@@ -116,8 +116,7 @@
   (let [wait-fn (if (integer? wait-time) (constantly wait-time) wait-time)
         retry (fn [attempt]
                 (let [res (try
-                            (with-transaction [tx graph :threaded? threaded? :rollback? rollback?]
-                              (f tx))
+                            (with-transaction* graph f :threaded? threaded? :rollback? rollback?)
                             (catch Throwable t
                               (if (< attempt max-attempts)
                                 ::retry

@@ -67,6 +67,7 @@
 (deftest test-transaction-retry
   (testing "Retry transaction"
     (let [graph (new-temp-titan-db)]
+      (reset! num-attempts 0)
       (is (thrown-with-msg? java.lang.Exception #"Died"
                    (g/with-transaction-retry [tx graph :max-attempts 3 :wait-time 100]
                      (v/create! tx {:name "Mallory"})
