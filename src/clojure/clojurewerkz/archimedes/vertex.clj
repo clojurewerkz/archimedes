@@ -137,7 +137,7 @@
     (if (empty? vertices)
       (set [(create! g m)])
       (do
-        (doseq [vertex vertices] (merge! g vertex m))
+        (doseq [vertex vertices] (merge! vertex m))
         vertices))))
 
 (defn unique-upsert!
