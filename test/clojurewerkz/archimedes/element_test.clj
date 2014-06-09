@@ -1,5 +1,5 @@
 (ns clojurewerkz.archimedes.element-test
-  (:use [clojure.test])
+  (:use [clojure.test :only [deftest is]])
   (:require [clojurewerkz.archimedes.graph :refer (clean-tinkergraph)]
             [clojurewerkz.archimedes.vertex :as v]
             [clojurewerkz.archimedes.edge :as e]))

@@ -1,5 +1,5 @@
 (ns clojurewerkz.archimedes.vertex-test
-  (:use [clojure.test])
+  (:use [clojure.test :only (deftest testing is)])
   (:require [clojurewerkz.archimedes.graph :as g]
             [clojurewerkz.archimedes.vertex :as v]
             [clojurewerkz.archimedes.edge :as e]))

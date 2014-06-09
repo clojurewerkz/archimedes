@@ -9,6 +9,7 @@
   :source-paths ["src/clojure"]
   :profiles {:dev    {:dependencies [[com.thinkaurelius.titan/titan-core  "0.4.4"]
                                      [com.thinkaurelius.titan/titan-berkeleyje "0.4.4"]
+                                     [org.slf4j/slf4j-nop "1.7.5"]
                                      [me.raynes/fs "1.4.4"]]}
              :1.4    {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.6    {:dependencies [[org.clojure/clojure "1.6.0"]]}

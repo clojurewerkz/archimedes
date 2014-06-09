@@ -3,7 +3,7 @@
             [clojurewerkz.archimedes.vertex :as v]
             [clojurewerkz.archimedes.edge   :as e]
             [clojurewerkz.archimedes.query  :as q])
-  (:use clojure.test))
+  (:use [clojure.test :only (deftest is)]))
 
 
 (deftest test-basic-vertices-query

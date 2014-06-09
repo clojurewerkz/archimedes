@@ -37,7 +37,7 @@
 (defn get-feature
   "Gets the value of the feature for a graph."
   [g s]
-  (get ^Map (get-features g) s))
+  (get ^java.util.Map (get-features g) s))
 
 ;;TODO Transactions need to be much more fine grain in terms of
 ;;control. And expections as well. new-transaction will only work on a
