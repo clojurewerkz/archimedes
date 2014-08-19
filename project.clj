@@ -5,10 +5,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [potemkin "0.2.0"]
-                 [com.tinkerpop.blueprints/blueprints-core "2.4.0"]]
+                 [com.tinkerpop.blueprints/blueprints-core "2.5.0"]]
   :source-paths ["src/clojure"]
-  :profiles {:dev    {:dependencies [[com.thinkaurelius.titan/titan-core  "0.4.4"]
-                                     [com.thinkaurelius.titan/titan-berkeleyje "0.4.4"]
+  :profiles {:dev    {:dependencies [[com.thinkaurelius.titan/titan-core  "0.5.0"]
+                                     [com.thinkaurelius.titan/titan-berkeleyje "0.5.0"]
                                      [org.slf4j/slf4j-nop "1.7.5"]
                                      [me.raynes/fs "1.4.4"]]}
              :1.4    {:dependencies [[org.clojure/clojure "1.4.0"]]}

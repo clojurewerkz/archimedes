@@ -20,7 +20,7 @@
 (defn- new-temp-titan-db
   []
   (let [dir (fs/temp-dir "testdb")]
-    (TitanFactory/open (.getPath dir))))
+    (TitanFactory/open (str "berkeleyje:" (.getPath dir)))))
 
 (deftest test-transaction-rollback-on-exception
   (testing "Uncaught exception reverts added vertex"
