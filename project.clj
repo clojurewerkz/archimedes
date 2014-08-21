@@ -10,7 +10,9 @@
   :profiles {:dev    {:dependencies [[com.thinkaurelius.titan/titan-core  "0.5.0"]
                                      [com.thinkaurelius.titan/titan-berkeleyje "0.5.0"]
                                      [org.slf4j/slf4j-nop "1.7.5"]
-                                     [me.raynes/fs "1.4.4"]]}
+                                     [clojurewerkz/support "1.0.0" :exclusions [com.google.guava/guava
+                                                                                org.clojure/clojure]]
+                                     [commons-io/commons-io "2.4"]]}
              :1.4    {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.6    {:dependencies [[org.clojure/clojure "1.6.0"]]}
              :master {:dependencies [[org.clojure/clojure "1.7.0-master-SNAPSHOT"]]}}
