@@ -66,8 +66,7 @@ is always recommended.
 
 ## Continuous Integration
 
-TBD: add it to travis-ci.org.
-
+[![Build Status](https://travis-ci.org/clojurewerkz/archimedes.svg?branch=master)](https://travis-ci.org/clojurewerkz/archimedes)
 
 ## Development
 
