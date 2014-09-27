@@ -101,3 +101,23 @@
     (is (= n1 1))
     (is (= n2 1))
     (is (= n3 0))))
+
+(deftest test-has-propetry-key
+  (let [graph (g/clean-tinkergraph)
+        a     (v/create-with-id!  graph 100 {:name "Steven" :age 30})
+        b     (v/create-with-id!  graph 101 {:name "Alonso" :age 32})
+        c     (v/create-with-id!  graph 102 {:name "Thomas" :age 38})
+        d     (v/create-with-id!  graph 103 {:name "Claire" :age 26})
+        _     (e/connect-with-id! graph 104 a :friend b {:age 28})
+        _     (e/connect-with-id! graph 105 a :friend c {:age 30})
+        _     (e/connect-with-id! graph 106 a :friend d)
+        n1    (q/count a
+                 (q/direction :out)
+                 (q/labels :friend))
+        n2    (q/count a
+                 (q/direction :out)
+                 (q/labels :friend)
+                 (q/has :age))]
+    (is (= n1 3))
+    (is (= n2 2)))
+)

@@ -16,6 +16,7 @@
 ;;
 
 (defmacro has
+  ([q k] `(.has ~q ~(name k)))
   ([q k v] `(.has ~q ~(name k) ~v))
   ([q k c v] `(.has ~q ~(name k) ~v (convert-symbol-to-compare '~c)) ))
 
