@@ -12,10 +12,7 @@ Archimedes is a Clojure library for working with graphs that conform to the [Tin
 ## Community
 
 Discussion about Archimedes takes place on the [Titanium mailing list](https://groups.google.com/forum/#!forum/clojure-titanium)
-Feel free to join in and ask any questions you may have. If you have
-any questions about Archimedes, ask
-[Zack on twitter](https://twitter.com/ZackMaril) or pop into
-`#clojurewerkz` on irc. 
+Feel free to join in and ask any questions you may have.
 
 ## Artifacts
 
