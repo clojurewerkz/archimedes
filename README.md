@@ -2,10 +2,6 @@
 
 Archimedes is a Clojure library for working with graphs that conform to the [Tinkerpop Blueprints](http://tinkerpop.com) interface.
 
-# Disclaimer: Archimedes and Titanium are currently being actively reworked with breaking API changes.
-
-See the blog post [Major Breaking Public API Changes Coming in Our Projects](http://blog.clojurewerkz.org/blog/2014/04/26/major-breaking-public-api-changes-coming-in-our-projects/) for a summary.
-
 ## Project Goals
 
  * Provide an API that makes [Tinkerpop Blueprints](http://tinkerpop.com) really easy to use from Clojure
