@@ -1,3 +1,15 @@
+## Changes in 2.5.0.0
+
+### Titan 0.5.0
+
+Archimedes now targets Titan 0.5.0.
+
+
+### Blueprints 2.5.0.0
+
+Archimedes now uses Blueprints 2.5.0.
+
+
 ## Changes in 1.0.0-alpha5 
 
 * Bug fix for `transact!` and it's feature sniffing. Whenever
