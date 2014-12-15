@@ -77,6 +77,6 @@ with your changes and all tests pass, submit a pull request on Github.
 
 ## License
 
-Copyright (C) 2013 Zack Maril
+Copyright (C) 2013-2014 Zack Maril and the ClojureWerkz Team
 
 Licensed under the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html) (the same as Clojure).
