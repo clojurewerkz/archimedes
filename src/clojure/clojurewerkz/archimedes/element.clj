@@ -27,15 +27,21 @@
   ;;Important when using types. You aren't ever going to change a
   ;;user's id for example.
   (doseq [[key value] (partition 2 kvs)]
-    (if (set? value)
+    (cond 
+      (set? value)
       (.property elem VertexProperty$Cardinality/set (name key) value (to-array []))
+      (sequential? value)
+      (.property elem VertexProperty$Cardinality/list (name key) value (to-array []))
+      :else
       (.property elem (name key) value)))
   elem)
 
 (defn merge!
   [^Element elem & maps]
   (doseq [d maps]
-    (apply assoc! (cons elem (flatten (into [] d)))))
+    (apply assoc! elem (if (map? d)
+                         (apply concat (into [] d))
+                         (flatten (into [] d)))))
   elem)
 
 (defn dissoc!

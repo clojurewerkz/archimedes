@@ -8,3 +8,6 @@ pom.xml*
 .lein-*
 .#*
 .nrepl-*
+.lsp/.cache/
+.clj-kondo/.cache/
+.portal/
