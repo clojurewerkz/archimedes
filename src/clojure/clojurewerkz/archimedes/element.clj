@@ -33,7 +33,10 @@
 (defn merge!
   [^Element elem & maps]
   (doseq [d maps]
-    (apply assoc! (cons elem (flatten (into [] d)))))
+    (apply assoc! elem (if (map? d) 
+                         (apply concat (into [] d))
+                         ;; The old code, for when a user passes directly [:k "val", ...x]
+                         (flatten (into [] d)))))
   elem)
 
 (defn dissoc!

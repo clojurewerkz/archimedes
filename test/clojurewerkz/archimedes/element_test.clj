@@ -33,6 +33,12 @@
     (is (nil? (:a (v/to-map a))))
     (is (nil? (:a (v/to-map c))))))
 
+(deftest test-create-with-properties!
+  (let [g (clean-tinkergraph)
+        a (v/create-with-id!  g 100 {:str "s", :num 1, :vec [1 2] :set #{"a" "b"}})]
+    (is (= {:str "s", :num 1, :vec [1 2] :set #{"a" "b"}} 
+           (select-keys (v/to-map a) [:str :num :vec :set])))))
+
 
 (deftest test-clear!
   (let [g (clean-tinkergraph)
