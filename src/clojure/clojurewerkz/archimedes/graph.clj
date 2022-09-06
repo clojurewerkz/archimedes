@@ -1,8 +1,7 @@
 (ns clojurewerkz.archimedes.graph
-  (:import (com.tinkerpop.blueprints Element Graph TransactionalGraph
-                                     ThreadedTransactionalGraph
-                                     TransactionalGraph$Conclusion)
-           (com.tinkerpop.blueprints.impls.tg TinkerGraphFactory)))
+  (:import (org.apache.tinkerpop.gremlin.structure Element Graph Graph$Features Graph$Features$GraphFeatures)
+           (org.apache.tinkerpop.gremlin.tinkergraph.structure TinkerFactory)
+           ))
 
 (def ^{:dynamic true} *element-id-key* :__id__)
 
@@ -19,25 +18,29 @@
 
 (defn new-tinkergraph
   []
-  (TinkerGraphFactory/createTinkerGraph))
+  (TinkerFactory/createClassic))
 
 (defn clean-tinkergraph
+  
   []
   (let [g (new-tinkergraph)]
-  (doseq [e (seq (.getEdges g))] (.removeEdge g e))
-  (doseq [v (seq (.getVertices g))] (.removeVertex g v))
-  g))
+    (doseq [e (iterator-seq (.edges g (to-array [])))] (.remove e))
+    (doseq [v (iterator-seq (.vertices g (to-array [])))] (.remove v))
+    g))
+;; TODO ROKA re-implement for graph, vertex and edge
+;; (defn get-features
+;;   "Get a map of features for a graph.
+;;   (http://tinkerpop.com/docs/javadocs/blueprints/2.1.0/com/tinkerpop/blueprints/Features.html)"
+;;   [g]
+;;   (.. g features toMap))
 
-(defn get-features
-  "Get a map of features for a graph.
-  (http://tinkerpop.com/docs/javadocs/blueprints/2.1.0/com/tinkerpop/blueprints/Features.html)"
-  [g]
-  (.. g getFeatures toMap))
+;; (defn get-feature
+;;   "Gets the value of the feature for a graph."
+;;   [g s]
+;;   (get ^java.util.Map (get-features g) s))
 
-(defn get-feature
-  "Gets the value of the feature for a graph."
-  [g s]
-  (get ^java.util.Map (get-features g) s))
+(defn supports-graph-feature [g s]
+  (-> g (.features) (.supports Graph$Features$GraphFeatures s)))
 
 ;;TODO Transactions need to be much more fine grain in terms of
 ;;control. And expections as well. new-transaction will only work on a
@@ -55,7 +58,7 @@
 (defn shutdown
   "Shutdown the graph."
   [g]
-  (.shutdown g))
+  (.close g))
 
 (defn rollback
   "Stops the current transaction and rolls back any changes made."
@@ -64,10 +67,10 @@
 
 (defn with-transaction*
   [graph f & {:keys [threaded? rollback?]}]
-  {:pre [(get-feature graph "supportsTransactions")]}
-  (let [tx (if threaded? (new-transaction graph) graph)]
+  {:pre [(supports-graph-feature graph Graph$Features$GraphFeatures/FEATURE_TRANSACTIONS)]}
+  (let [tx (.tx graph)]
     (try
-      (let [result (f tx)]
+      (let [result (f graph)]
         (if rollback?
           (rollback tx)
           (commit tx))

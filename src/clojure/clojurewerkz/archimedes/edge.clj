@@ -1,11 +1,10 @@
 (ns clojurewerkz.archimedes.edge
   (:refer-clojure :exclude [keys vals assoc! dissoc! get])
-  (:import (com.tinkerpop.blueprints Vertex Edge Direction Graph)
-           (com.tinkerpop.blueprints.impls.tg TinkerGraph))
+  (:import (org.apache.tinkerpop.gremlin.structure Vertex Edge Direction Graph T)
+           (org.apache.tinkerpop.gremlin.tinkergraph.structure TinkerGraph))
   (:require [clojurewerkz.archimedes.vertex :as v]
             [clojurewerkz.archimedes.graph :refer (*element-id-key* *edge-label-key*)]
             [clojurewerkz.archimedes.conversion :refer (to-edge-direction)]
-            [clojurewerkz.archimedes.query :as q]
             [clojurewerkz.archimedes.element :as ele]
             [potemkin :as po]))
 
@@ -26,7 +25,7 @@
 (defn refresh
   "Goes and grabs the edge from the graph again. Useful for \"refreshing\" stale edges."
   [g ^Edge edge]
-   (.getEdge g (.getId edge)))
+  (.next (.edges g (to-array [(.id edge)]))))
 
 ;;
 ;; Removal methods
@@ -35,7 +34,7 @@
 (defn remove!
   "Remove an edge."
   [g ^Edge edge]
-  (.removeEdge g edge))
+  (.remove edge))
 
 ;;
 ;; Information getters
@@ -44,7 +43,7 @@
 (defn label-of
   "Get the label of the edge"
   [^Edge edge]
-  (keyword (.getLabel edge)))
+  (keyword (.label edge)))
 
 (defn to-map
   "Returns a persisten map representing the edge."
@@ -56,35 +55,38 @@
 (defn find-by-id
   "Retrieves edges by id from the graph."
   [g & ids]
-  (if (= 1 (count ids))
-                (.getEdge g (first ids))
-                (seq (for [id ids] (.getEdge g id)))))
+  (let [results (.edges g (to-array ids))]
+    (if (= 1 (count ids))
+      (if (.hasNext results) (.next results) nil)
+      (iterator-seq results))))
 
 (defn get-all-edges
   "Returns all edges."
   [g]
-  (set (.getEdges g)))
+  (set (iterator-seq (.edges g (to-array [])))))
 
 (defn ^Vertex get-vertex
   "Get the vertex of the edge in a certain direction."
   [^Edge e direction]
-  (.getVertex e (to-edge-direction direction)))
+  (if (= :in direction)
+    (.inVertex e)
+    (.outVertex e)))
 
 (defn ^Vertex head-vertex
   "Get the head vertex of the edge."
   [^Edge e]
-  (.getVertex e Direction/IN))
+  (.inVertex e))
 
 (defn ^Vertex tail-vertex
   "Get the tail vertex of the edge."
   [^Edge e]
-  (.getVertex e Direction/OUT))
+  (.outVertex e))
 
 (defn endpoints
   "Returns the endpoints of the edge in array with the order [starting-node,ending-node]."
   [^Edge edge]
-  [(.getVertex edge Direction/OUT)
-   (.getVertex edge Direction/IN)])
+  [(.outVertex edge)
+   (.inVertex edge)])
 
 (defn edges-between
   "Returns a set of the edges between two vertices, direction considered."
@@ -92,14 +94,14 @@
      (edges-between v1 nil v2))
   ([^Vertex v1 label ^Vertex v2]
      ;; Source for these edge queries:
-     ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
-     (let [^Edge edges (q/find-edges v1
-                                     (q/direction :out)
-                                     (q/labels label))
-           v2-id (.getId v2)
-           edge-set (set (filter #(= v2-id (.getId (.getVertex % (to-edge-direction :in)))) edges))]
+   ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
+   (let [label-arg (if label (into-array String [(name label)]) (into-array String []))
+         edges (.edges v1 Direction/OUT label-arg)
+         v2-id (.id v2)
+         edge-set (set (filter #(= v2-id (.id (.inVertex %))) (iterator-seq edges)))]
        (when (not (empty? edge-set))
-         edge-set))))
+       edge-set))
+   ))
 
 (defn connected?
   "Returns whether or not two vertices are connected. Optional third
@@ -118,7 +120,7 @@
   ([g ^Vertex v1 label ^Vertex v2]
      (connect! g v1 label v2 {}))
   ([g ^Vertex v1 label ^Vertex v2 data]
-     (let [new-edge (.addEdge g nil v1 v2 ^String (name label))]
+     (let [new-edge (.addEdge v1 ^String (name label) v2 (to-array []))] ;TODO add properties here
        (merge! new-edge data))))
 
 (defn connect-with-id!
@@ -126,7 +128,7 @@
   ([g id ^Vertex v1 label ^Vertex v2]
      (connect-with-id! g id v1 label v2 {}))
   ([g id ^Vertex v1 label ^Vertex v2 data]
-     (let [new-edge (.addEdge g id v1 v2 ^String (name label))]
+     (let [new-edge (.addEdge  v1 ^String (name label) v2 (to-array [T/id id]))]
        (merge! new-edge data))))
 
 (defn upconnect!
